@@ -60,6 +60,16 @@ app.use("/api/class-updates", classUpdatesRouter);
 /* =====================================================
    CONNECT DB & START SERVER
 ===================================================== */
+/* 🔍 TEST DATABASE CONNECTION */
+app.get("/test-db", async (req, res) => {
+  try {
+    const mongoose = require("mongoose");
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    res.json({ connected: true, collections });
+  } catch (err) {
+    res.json({ connected: false, error: err.message });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 
