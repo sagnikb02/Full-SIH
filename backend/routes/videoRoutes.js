@@ -106,7 +106,7 @@ router.post(
       }
 
       const baseUrl =
-        process.env.BACKEND_PUBLIC_URL || 'http://localhost:5000';
+        process.env.BACKEND_PUBLIC_URL || 'https://backend-sih-nkv5.onrender.com';
 
       // VIDEO
       const videoFilePath = `/uploads/videos/${videoFile.filename}`;
