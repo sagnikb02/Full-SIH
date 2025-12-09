@@ -17,12 +17,13 @@ const classUpdatesRouter = require("./routes/classUpdates");
 const app = express();
 
 /* =====================================================
-   CORS — ALLOW ONLY LIVE FRONTEND
+   🔥 CORS — ALLOW ONLY LIVE FRONTEND + AUTH SUPPORT
 ===================================================== */
-
 app.use(cors({
-  origin: "https://css-sih.onrender.com",  // LIVE FRONTEND ONLY
+  origin: "https://css-sih.onrender.com",      // your frontend URL
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"]   // REQUIRED for JWT
 }));
 
 /* =====================================================
@@ -31,7 +32,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// If you allow uploads, keep this:
+// Static files if needed:
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* =====================================================
@@ -46,7 +47,7 @@ app.get("/api/health", (req, res) => {
 });
 
 /* =====================================================
-   API ROUTING
+   API ROUTES
 ===================================================== */
 app.use("/api/auth", authRoutes);
 app.use("/api/quizzes", quizRoutes);
@@ -57,7 +58,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/class-updates", classUpdatesRouter);
 
 /* =====================================================
-   START SERVER + CONNECT DATABASE
+   CONNECT DB & START SERVER
 ===================================================== */
 
 const PORT = process.env.PORT || 5000;
