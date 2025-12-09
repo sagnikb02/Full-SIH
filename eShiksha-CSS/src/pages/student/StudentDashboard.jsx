@@ -496,6 +496,7 @@ function LearningHub({ user, subjectsData }) {
   };
 
   const [viewState, setViewState] = useState('subjects');
+  // GLITCH FIX: Store the ID (which is stable) instead of the whole object (which changes with translation)
   const [selectedSubjectId, setSelectedSubjectId] = useState(null);
   
   const selectedSubject = useMemo(() => {
@@ -525,6 +526,7 @@ function LearningHub({ user, subjectsData }) {
 
   const subjectVideos = useMemo(() => {
     return videos.filter((v) => {
+      // FIX: Compare with ID (Database value) instead of Name (Display value)
       const matchSubject = selectedSubjectId && (v.subject || 'Misc').toLowerCase() === selectedSubjectId.toLowerCase();
       const matchSearch = viewState === 'list' && searchTerm ? (v.title || '').toLowerCase().includes(searchTerm.toLowerCase()) : true;
       return matchSubject && matchSearch;
