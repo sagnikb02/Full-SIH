@@ -20,7 +20,7 @@ const app = express();
    🔥 CORS — ALLOW ONLY LIVE FRONTEND + AUTH SUPPORT
 ===================================================== */
 app.use(cors({
-  origin: "https://css-sih.onrender.com",      // your frontend URL
+  origin: "https://full-sih-1.onrender.com",      // your frontend URL
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]   // REQUIRED for JWT
@@ -75,6 +75,6 @@ const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`🚀 Backend Running → https://backend-sih-nkv5.onrender.com`);
+    console.log(`🚀 Backend Running → https://full-sih.onrender.com`);
   });
 });
