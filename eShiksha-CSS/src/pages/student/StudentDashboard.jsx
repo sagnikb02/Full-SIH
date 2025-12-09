@@ -28,7 +28,6 @@ export default function StudentDashboard() {
     nav_hub: { en: "Learning Hub", pa: "ਲਰਨਿੰਗ ਹੱਬ" },
     nav_down: { en: "Downloads", pa: "ਡਾਊਨਲੋਡ" },
     nav_play: { en: "Playlist", pa: "ਪਲੇਲਿਸਟ" },
-    nav_quiz: { en: "Quizzes", pa: "ਕਵਿਜ਼" },
     nav_acc: { en: "Account", pa: "ਖਾਤਾ" },
 
     // Welcome Section
@@ -50,8 +49,8 @@ export default function StudentDashboard() {
     desc_ex: { en: "Real-time assessment", pa: "ਰੀਅਲ-ਟਾਈਮ ਮੁਲਾਂਕਣ" },
     assign: { en: "Assignments", pa: "ਅਸਾਈਨਮੈਂਟ" },
     desc_ass: { en: "Homework portal", pa: "ਹੋਮਵਰਕ ਪੋਰਟਲ" },
-    news: { en: "Daily News", pa: "ਰੋਜ਼ਾਨਾ ਖਬਰਾਂ" },
-    desc_news: { en: "Tech updates", pa: "ਤਕਨੀਕੀ ਅੱਪਡੇਟ" },
+    updates: { en: "Class Updates", pa: "ਜਮਾਤ ਅੱਪਡੇਟ" },
+    desc_updates: { en: "Important announcements", pa: "ਮਹੱਤਵਪੂਰਨ ਐਲਾਨ" },
 
     // Subjects (Display Names)
     sci: { en: "Science", pa: "ਵਿਗਿਆਨ" },
@@ -69,11 +68,10 @@ export default function StudentDashboard() {
     { icon: <Zap />, title: t(content.daily_qz), desc: t(content.desc_qz), color: "#f59e0b" },
     { icon: <PenTool />, title: t(content.live_ex), desc: t(content.desc_ex), color: "#ef4444" },
     { icon: <FileText />, title: t(content.assign), desc: t(content.desc_ass), color: "#10b981" },
-    { icon: <Calendar />, title: t(content.news), desc: t(content.desc_news), color: "#06b6d4" },
+    { icon: <Calendar />, title: t(content.updates), desc: t(content.desc_updates), color: "#06b6d4" },
   ];
 
-  // FIX: Added 'id' which matches the DATABASE value (usually English)
-  // 'name' is for DISPLAY (Translated)
+  // DATA IDS MATCH DATABASE (English), NAMES MATCH TRANSLATION
   const SUBJECTS_DATA = [
     { id: "Science", name: t(content.sci), color: "#06b6d4", count: 24 },
     { id: "SST", name: t(content.sst), color: "#8b5cf6", count: 18 },
@@ -121,26 +119,32 @@ export default function StudentDashboard() {
             radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.08), transparent 50%);
         }
 
+        /* --- RESPONSIVE SIDEBAR --- */
         .sidebar {
           width: 90px; height: 100vh;
-          background: rgba(15, 23, 42, 0.8);
+          background: rgba(15, 23, 42, 0.9);
           border-right: 1px solid var(--glass-border);
-          display: flex; flex-direction: column; align-items: center;
-          padding-top: 2.5rem; gap: 2rem;
-          backdrop-filter: blur(20px); z-index: 50;
+          display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+          padding: 2rem 0;
+          backdrop-filter: blur(20px); z-index: 100;
           transition: all 0.3s ease;
         }
+        
+        .nav-group { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; align-items: center; }
 
         /* Mobile Bottom Nav */
         @media (max-width: 768px) {
           .dashboard-wrapper { flex-direction: column-reverse; } 
           .sidebar {
-            width: 100vw; height: 70px;
-            flex-direction: row; justify-content: space-around;
-            padding: 0; border-right: none; border-top: 1px solid var(--glass-border);
-            position: fixed; bottom: 0; left: 0; background: #020617;
+            width: 100vw; height: 75px;
+            flex-direction: row; justify-content: space-evenly;
+            align-items: center; padding: 0 10px;
+            border-right: none; border-top: 1px solid var(--glass-border);
+            position: fixed; bottom: 0; left: 0; 
+            background: rgba(2, 6, 23, 0.98); 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
           }
-          .nav-spacer { display: none; } 
+          .nav-group { flex-direction: row; justify-content: space-evenly; gap: 0; width: 100%; }
         }
 
         .nav-icon-box {
@@ -158,28 +162,33 @@ export default function StudentDashboard() {
           box-shadow: 0 0 15px rgba(6,182,212,0.3);
         }
 
+        /* --- MAIN CONTENT AREA --- */
         .main-content {
           flex: 1; height: 100vh; overflow-y: auto;
           padding: 2rem 3rem; position: relative;
-          padding-bottom: 100px;
+          padding-bottom: 120px; /* Space for mobile nav */
         }
         .main-content::-webkit-scrollbar { width: 6px; }
         .main-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 
         @media (max-width: 768px) {
-          .main-content { padding: 1.5rem; height: calc(100vh - 70px); }
+          .main-content { padding: 1.5rem; height: 100vh; padding-bottom: 120px; }
         }
 
+        /* --- TYPOGRAPHY & GRADIENTS --- */
+        .title-orange {
+          font-weight: 800;
+          background: linear-gradient(to right, #ffedd5, #fb923c, #f97316, #ea580c, #ffedd5);
+          background-size: 200% auto;
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          animation: shine 5s linear infinite;
+          line-height: 1.6; padding-top: 5px; padding-bottom: 5px; display: inline-block;
+        }
         .gradient-text {
           background: linear-gradient(90deg, #ffffff 0%, #38bdf8 50%, #818cf8 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-size: 200% auto; animation: shine 5s linear infinite;
-          
-          /* CRITICAL FOR PUNJABI FONT */
-          line-height: 1.5; 
-          padding-top: 5px;
-          padding-bottom: 5px;
-          display: inline-block;
+          line-height: 1.6; padding-top: 5px; padding-bottom: 5px; display: inline-block;
         }
         @keyframes shine { to { background-position: 200% center; } }
 
@@ -212,7 +221,13 @@ export default function StudentDashboard() {
           color: white; font-size: 1rem; outline: none; transition: 0.3s;
         }
         .search-input:focus { border-color: var(--primary-glow); box-shadow: 0 0 15px rgba(6,182,212,0.1); }
+        .input-field {
+          width: 100%; padding: 12px 16px; border-radius: 12px;
+          background: rgba(15,23,42,0.8); border: 1px solid var(--glass-border);
+          color: white; font-size: 0.95rem; outline: none; transition: 0.3s;
+        }
 
+        /* --- RESPONSIVE GRIDS --- */
         .carousel-track { display: flex; gap: 24px; padding: 10px 0; width: max-content; }
         
         .offer-card {
@@ -230,8 +245,9 @@ export default function StudentDashboard() {
           font-size: 0.95rem; font-weight: 500; color: #cbd5e1; white-space: nowrap; flex-shrink: 0;
         }
 
+        /* --- SEARCH LAYOUT --- */
         .subject-grid {
-          display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;
+          display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px;
         }
         
         .subject-card {
@@ -260,17 +276,22 @@ export default function StudentDashboard() {
         }
         .video-seq-item:hover { background: rgba(255,255,255,0.05); border-color: var(--primary-glow); transform: translateX(5px); }
 
+        /* --- VIDEO PLAYER UI --- */
         .video-page-wrapper {
           display: flex; flex-direction: column; width: 100%; max-width: 1200px; margin: 0 auto;
         }
         
         .player-frame {
-          width: 100%; height: 60vh;
+          width: 100%; height: 60vh; /* Fixed height for cinema feel */
           background: black; border-radius: 20px; overflow: hidden;
           box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8);
         }
         @media (max-width: 768px) { .player-frame { height: 40vh; } }
 
+        .video-meta-bar {
+          display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 15px;
+        }
+        
         .action-btn {
           display: flex; align-items: center; gap: 8px;
           padding: 8px 16px; border-radius: 30px;
@@ -279,24 +300,29 @@ export default function StudentDashboard() {
         }
         .action-btn:hover { background: rgba(6,182,212,0.15); border-color: var(--primary-glow); color: white; }
 
+        /* FIXED HEIGHT TABS CONTAINER */
         .tabs-container {
           margin-top: 40px; background: rgba(255,255,255,0.02);
           border-radius: 24px; padding: 30px; border: 1px solid var(--glass-border);
-          min-height: 400px;
+          min-height: 400px; /* Prevents jumping */
         }
+        @media (max-width: 600px) { .tabs-container { padding: 15px; } }
+
       `}</style>
 
       {/* SIDEBAR */}
       <nav className="sidebar">
-        <div className="nav-spacer" style={{ marginBottom: 'auto', display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', alignItems:'center' }}>
-          <NavIcon icon={<Home size={22} />} id="home" active={activeTab} set={setActiveTab} tooltip={t(content.nav_home)} />
-          <NavIcon icon={<Clapperboard size={22} />} id="search" active={activeTab} set={setActiveTab} tooltip={t(content.nav_hub)} />
-          <NavIcon icon={<Download size={22} />} id="downloads" active={activeTab} set={setActiveTab} tooltip={t(content.nav_down)} />
-          <NavIcon icon={<ListVideo size={22} />} id="saved" active={activeTab} set={setActiveTab} tooltip={t(content.nav_play)} />
-          <NavIcon icon={<CheckSquare size={22} />} id="quizzes" active={activeTab} set={setActiveTab} tooltip={t(content.nav_quiz)} />
+        {/* Main Icons Group */}
+        <div className="nav-group">
+          <NavIcon icon={<Home size={24} />} id="home" active={activeTab} set={setActiveTab} tooltip={t(content.nav_home)} />
+          <NavIcon icon={<Clapperboard size={24} />} id="search" active={activeTab} set={setActiveTab} tooltip={t(content.nav_hub)} />
+          <NavIcon icon={<Download size={24} />} id="downloads" active={activeTab} set={setActiveTab} tooltip={t(content.nav_down)} />
+          <NavIcon icon={<ListVideo size={24} />} id="saved" active={activeTab} set={setActiveTab} tooltip={t(content.nav_play)} />
         </div>
-        <div className="nav-spacer" style={{ marginBottom: '2rem' }}>
-           <NavIcon icon={<User size={22} />} id="account" active={activeTab} set={setActiveTab} tooltip={t(content.nav_acc)} />
+        
+        {/* Footer Icons (Account) */}
+        <div className="nav-group nav-spacer-bottom" style={{ marginBottom: '2rem' }}>
+           <NavIcon icon={<User size={24} />} id="account" active={activeTab} set={setActiveTab} tooltip={t(content.nav_acc)} />
         </div>
       </nav>
 
@@ -312,7 +338,7 @@ export default function StudentDashboard() {
           {activeTab === 'home' && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div style={{ marginBottom: '3rem', marginTop: '1rem' }}>
-                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, margin: 0 }} className="gradient-text">
+                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, margin: 0 }} className="title-orange">
                   {t(content.welcome)}, {user?.name?.split(' ')[0] || 'Student'}.
                 </h1>
                 <p style={{ fontSize: '1.1rem', color: '#64748b', marginTop: '10px' }}>{t(content.subtitle)}</p>
@@ -339,7 +365,7 @@ export default function StudentDashboard() {
                 <div className="section-header gradient-text" style={{backgroundClip:'text', WebkitBackgroundClip:'text'}}>{t(content.skills)}</div>
                 <motion.div className="carousel-track" animate={{ x: [-500, 0] }} transition={{ ease: "linear", duration: 40, repeat: Infinity }}>
                   {[...SUBJECTS_DATA, ...SUBJECTS_DATA, ...SUBJECTS_DATA].map((s, i) => (
-                    <div key={i} className="tech-chip" style={{ borderLeft: `3px solid ${s.color}` }}>{s.name}</div>
+                    <div key={i} className="tech-chip" style={{ borderLeft: 3px solid ${s.color} }}>{s.name}</div>
                   ))}
                 </motion.div>
               </div>
@@ -370,14 +396,7 @@ export default function StudentDashboard() {
             </motion.div>
           )}
 
-          {/* 5. QUIZZES */}
-          {activeTab === 'quizzes' && (
-            <motion.div key="quizzes" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <QuizPage user={user} />
-            </motion.div>
-          )}
-
-          {/* 6. ACCOUNT */}
+          {/* 5. ACCOUNT */}
           {activeTab === 'account' && (
             <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <AccountSection user={user} setUser={setUser} handleLogout={handleLogout} />
@@ -395,11 +414,57 @@ export default function StudentDashboard() {
 function NavIcon({ icon, id, active, set, tooltip }) {
   const isActive = active === id;
   return (
-    <div className={`nav-icon-box ${isActive ? 'active' : ''}`} onClick={() => set(id)} title={tooltip}>
+    <div className={nav-icon-box ${isActive ? 'active' : ''}} onClick={() => set(id)} title={tooltip}>
       {icon}
       {isActive && <motion.div layoutId="glow" style={{ position: 'absolute', inset: 0, borderRadius: '14px', boxShadow: '0 0 15px var(--primary-glow)', opacity: 0.3 }} />}
     </div>
   )
+}
+
+/* === CLASS UPDATES SECTION === */
+function NewsSection({ user }) {
+  const { t } = useLanguage();
+  const content = {
+    header: { en: "Class Updates", pa: "ਜਮਾਤ ਅੱਪਡੇਟ" },
+    loading: { en: "Loading…", pa: "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ..." },
+    no_updates: { en: "No updates from your teacher yet.", pa: "ਤੁਹਾਡੇ ਅਧਿਆਪਕ ਵੱਲੋਂ ਅਜੇ ਕੋਈ ਅੱਪਡੇਟ ਨਹੀਂ।" },
+    fail_load: { en: "Failed to load class updates.", pa: "ਕਲਾਸ ਅੱਪਡੇਟ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ।" }
+  };
+
+  const [updates, setUpdates] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!user?.className) { setUpdates([]); return; }
+    const fetchUpdates = async () => {
+      try {
+        setLoading(true); setError('');
+        const res = await api.get('/class-updates', { params: { className: user.className, limit: 5 } });
+        setUpdates(res.data || []);
+      } catch (e) { console.error(e); setError(t(content.fail_load)); } finally { setLoading(false); }
+    };
+    fetchUpdates();
+  }, [user?.className, t]);
+
+  return (
+    <div>
+      <div className="section-header gradient-text" style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}>{t(content.header)}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+        {loading && <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>{t(content.loading)}</p>}
+        {error && <p style={{ color: '#f97373', fontSize: '0.9rem' }}>{error}</p>}
+        {!loading && !error && updates.length === 0 && <p style={{ color: '#64748b', fontSize: '0.9rem' }}>{t(content.no_updates)}</p>}
+        {!loading && !error && updates.map((u) => (
+            <div key={u._id} className="glass-panel" style={{ borderLeft: '3px solid var(--primary-glow)', padding: '20px' }}>
+              <h4 style={{ fontSize: '1rem', marginBottom: '8px', fontWeight: 600 }}>{u.text}</h4>
+              <div style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', justifyContent: 'space-between' }}>
+                <span>{u.authorName || 'Teacher'}</span><span>{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : ''}</span>
+              </div>
+            </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /* === LEARNING HUB LOGIC === */
@@ -431,10 +496,8 @@ function LearningHub({ user, subjectsData }) {
   };
 
   const [viewState, setViewState] = useState('subjects');
-  // GLITCH FIX: Store the ID (which is stable) instead of the whole object (which changes with translation)
   const [selectedSubjectId, setSelectedSubjectId] = useState(null);
   
-  // Computed property to get the full subject object based on ID
   const selectedSubject = useMemo(() => {
     return subjectsData.find(s => s.id === selectedSubjectId);
   }, [subjectsData, selectedSubjectId]);
@@ -462,7 +525,6 @@ function LearningHub({ user, subjectsData }) {
 
   const subjectVideos = useMemo(() => {
     return videos.filter((v) => {
-      // FIX: Compare with ID (Database value) instead of Name (Display value)
       const matchSubject = selectedSubjectId && (v.subject || 'Misc').toLowerCase() === selectedSubjectId.toLowerCase();
       const matchSearch = viewState === 'list' && searchTerm ? (v.title || '').toLowerCase().includes(searchTerm.toLowerCase()) : true;
       return matchSubject && matchSearch;
@@ -484,7 +546,7 @@ function LearningHub({ user, subjectsData }) {
     const fetchComments = async () => {
       try {
         setLoadingComments(true);
-        const res = await api.get(`/videos/${selectedVideo._id}/comments`);
+        const res = await api.get(/videos/${selectedVideo._id}/comments);
         setComments(res.data || []);
       } catch (err) { setComments([]); } finally { setLoadingComments(false); }
     };
@@ -501,9 +563,9 @@ function LearningHub({ user, subjectsData }) {
     if (!selectedVideo || !newComment.trim()) return;
     try {
       setPostingComment(true);
-      await api.post(`/videos/${selectedVideo._id}/comments`, { text: newComment.trim(), authorName: user?.name || 'Student', authorEmail: user?.email, role: 'student' });
+      await api.post(/videos/${selectedVideo._id}/comments, { text: newComment.trim(), authorName: user?.name || 'Student', authorEmail: user?.email, role: 'student' });
       setNewComment('');
-      const res = await api.get(`/videos/${selectedVideo._id}/comments`);
+      const res = await api.get(/videos/${selectedVideo._id}/comments);
       setComments(res.data || []);
     } catch (err) { alert('Failed to post doubt.'); } finally { setPostingComment(false); }
   };
@@ -518,7 +580,7 @@ function LearningHub({ user, subjectsData }) {
     if (!quizData || !selectedVideo || !user?.email) return;
     try {
       setQuizSubmitting(true);
-      const res = await api.post(`/quizzes/${quizData._id}/submit`, { answers: quizAnswers, name: user.name, email: user.email, className: user.className });
+      const res = await api.post(/quizzes/${quizData._id}/submit, { answers: quizAnswers, name: user.name, email: user.email, className: user.className });
       setQuizResult({ score: res.data.score, total: res.data.total });
     } catch (err) { alert(err?.response?.data?.message || 'Failed to submit quiz.'); } finally { setQuizSubmitting(false); }
   };
@@ -530,7 +592,7 @@ function LearningHub({ user, subjectsData }) {
           <button onClick={handleBack} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', padding: '12px', color: 'white', cursor: 'pointer' }}><ChevronLeft size={24} /></button>
         )}
         <div style={{ flex: 1 }}>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, margin: 0 }} className="gradient-text">
+          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, margin: 0 }} className="title-orange">
             {viewState === 'subjects' ? t(content.hub_title) : viewState === 'list' ? selectedSubject?.name : t(content.now_playing)}
           </h2>
         </div>
@@ -543,7 +605,7 @@ function LearningHub({ user, subjectsData }) {
             <div className="subject-grid">
               {subjectsData.map((subj, i) => (
                 <div key={subj.id || i} className="subject-card" onClick={() => handleSubjectClick(subj)}>
-                  <div className="subject-icon" style={{ color: subj.color, border: `1px solid ${subj.color}44` }}><BookOpen size={32} /></div>
+                  <div className="subject-icon" style={{ color: subj.color, border: 1px solid ${subj.color}44 }}><BookOpen size={32} /></div>
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'white' }}>{subj.name}</h3>
                   <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '5px' }}>{subj.count} {t(content.lessons)}</p>
                 </div>
@@ -555,22 +617,22 @@ function LearningHub({ user, subjectsData }) {
         {viewState === 'list' && selectedSubject && (
           <motion.div key="list" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="split-view">
             <div className="scroll-col" style={{ overflowY: 'auto' }}>
-              <input className="search-input" placeholder={`${t(content.search_ph)} ${selectedSubject.name}...`} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ marginBottom: '20px' }} />
+              <input className="search-input" placeholder={${t(content.search_ph)} ${selectedSubject.name}...} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ marginBottom: '20px' }} />
               <div className="section-header gradient-text" style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}>{selectedSubject.name} {t(content.curr)}</div>
               {subjectVideos.length === 0 ? (
                 <p style={{ color: '#64748b' }}>{t(content.no_vid)}</p>
               ) : (
-                subjectVideos.map((video, idx) => (
-                  <div key={video._id} className="video-seq-item" onClick={() => handleVideoClick(video)}>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'rgba(255,255,255,0.1)', width: '40px', display: 'flex', alignItems: 'center' }}>{(idx + 1).toString().padStart(2, '0')}</div>
-                    <div style={{ width: '140px', height: '80px', background: '#0f172a', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Play size={32} fill="white" /></div>
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '4px' }}>{video.title}</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
+                  {subjectVideos.map((video, idx) => (
+                    <div key={video._id} onClick={() => handleVideoClick(video)} style={{ cursor: 'pointer' }}>
+                      <div style={{ height: '130px', background: '#1e1e1e', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                         <Play size={30} color="white" />
+                      </div>
+                      <h4 style={{ fontSize: '1rem', marginTop: '10px', fontWeight: 600 }}>{video.title}</h4>
                       <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Class {video.className} • {video.subject}</p>
                     </div>
-                    <ChevronRight size={24} color="#64748b" />
-                  </div>
-                ))
+                  ))}
+                </div>
               )}
             </div>
             <div className="scroll-col" style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
@@ -661,8 +723,11 @@ function LearningHub({ user, subjectsData }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
                 {subjectVideos.filter((v) => v._id !== selectedVideo._id).map((vid, i) => (
                   <div key={vid._id || i} onClick={() => handleVideoClick(vid)} style={{ cursor: 'pointer' }}>
-                    <div style={{ height: '130px', background: '#1e293b', borderRadius: '12px', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Play size={30} fill="white" /></div>
-                    <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>{vid.title}</h4>
+                    <div style={{ height: '130px', background: '#1e1e1e', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                       <Play size={30} color="white" />
+                    </div>
+                    <h4 style={{ fontSize: '1rem', marginTop: '10px', fontWeight: 600 }}>{vid.title}</h4>
+                    <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Class {vid.className} • {vid.subject}</p>
                   </div>
                 ))}
                 {subjectVideos.length <= 1 && <p style={{ color: '#64748b' }}>{t(content.no_vid)}</p>}
@@ -675,132 +740,13 @@ function LearningHub({ user, subjectsData }) {
   );
 }
 
-/* === CLASS UPDATES SECTION === */
-function NewsSection({ user }) {
-  const { t } = useLanguage();
-  const content = {
-    header: { en: "Class Updates", pa: "ਕਲਾਸ ਅੱਪਡੇਟ" },
-    loading: { en: "Loading…", pa: "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ..." },
-    no_updates: {
-      en: "No updates from your teacher yet.",
-      pa: "ਤੁਹਾਡੇ ਅਧਿਆਪਕ ਵੱਲੋਂ ਅਜੇ ਕੋਈ ਅੱਪਡੇਟ ਨਹੀਂ।"
-    },
-    fail_load: {
-      en: "Failed to load class updates.",
-      pa: "ਕਲਾਸ ਅੱਪਡੇਟ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ।"
-    }
-  };
-
-  const [updates, setUpdates] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!user?.className) {
-      setUpdates([]);
-      return;
-    }
-
-    const fetchUpdates = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        const res = await api.get('/class-updates', {
-          params: { className: user.className, limit: 5 },
-        });
-        setUpdates(res.data || []);
-      } catch (e) {
-        console.error(e);
-        setError(t(content.fail_load));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUpdates();
-  }, [user?.className, t]); // keep t in deps because of translations
-
-  return (
-    <div>
-      <div
-        className="section-header gradient-text"
-        style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}
-      >
-        {t(content.header)}
-      </div>
-
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '20px',
-        }}
-      >
-        {loading && (
-          <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
-            {t(content.loading)}
-          </p>
-        )}
-
-        {error && (
-          <p style={{ color: '#f97373', fontSize: '0.9rem' }}>{error}</p>
-        )}
-
-        {!loading && !error && updates.length === 0 && (
-          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
-            {t(content.no_updates)}
-          </p>
-        )}
-
-        {!loading &&
-          !error &&
-          updates.map((u) => (
-            <div
-              key={u._id}
-              className="glass-panel"
-              style={{
-                borderLeft: '3px solid var(--primary-glow)',
-                padding: '20px',
-              }}
-            >
-              <h4
-                style={{
-                  fontSize: '1rem',
-                  marginBottom: '8px',
-                  fontWeight: 600,
-                }}
-              >
-                {u.message}
-              </h4>
-              <div
-                style={{
-                  fontSize: '0.8rem',
-                  color: '#94a3b8',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span>{u.teacherName || 'Teacher'}</span>
-                <span>
-                  {u.createdAt
-                    ? new Date(u.createdAt).toLocaleDateString()
-                    : ''}
-                </span>
-              </div>
-            </div>
-          ))}
-      </div>
-    </div>
-  );
-}
-
 
 /* === INDEPENDENT PAGES === */
 function DownloadPage() {
   const { t } = useLanguage();
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="gradient-text">{t({ en: "Offline Downloads", pa: "ਔਫਲਾਈਨ ਡਾਊਨਲੋਡ" })}</h1>
+      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="title-orange">{t({ en: "Offline Downloads", pa: "ਔਫਲਾਈਨ ਡਾਊਨਲੋਡ" })}</h1>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
         {[1, 2, 3].map(i => (
           <div key={i} className="glass-panel" style={{ padding: '20px' }}>
@@ -819,137 +765,11 @@ function PlaylistPage() {
   const { t } = useLanguage();
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="gradient-text">{t({ en: "Saved Playlist", pa: "ਸੁਰੱਖਿਅਤ ਪਲੇਲਿਸਟ" })}</h1>
+      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="title-orange">{t({ en: "Saved Playlist", pa: "ਸੁਰੱਖਿਅਤ ਪਲੇਲਿਸਟ" })}</h1>
       <div style={{ textAlign: 'center', padding: '100px', color: '#64748b' }}>
         <ListVideo size={64} style={{ marginBottom: '20px', opacity: 0.5 }} />
         <p style={{ fontSize: '1.2rem' }}>{t({ en: "Your playlist is empty. Add videos from the Learning Hub.", pa: "ਤੁਹਾਡੀ ਪਲੇਲਿਸਟ ਖਾਲੀ ਹੈ। ਲਰਨਿੰਗ ਹੱਬ ਤੋਂ ਵੀਡੀਓ ਸ਼ਾਮਲ ਕਰੋ।" })}</p>
       </div>
-    </div>
-  )
-}
-
-function QuizPage({ user }) {
-  const { t } = useLanguage();
-  const content = {
-    active_quizzes: { en: "Active Quizzes", pa: "ਸਰਗਰਮ ਕਵਿਜ਼" },
-    no_quiz: { en: "No quizzes assigned.", pa: "ਕੋਈ ਕਵਿਜ਼ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕੀਤਾ ਗਿਆ।" },
-    start: { en: "Start Quiz", pa: "ਕਵਿਜ਼ ਸ਼ੁਰੂ ਕਰੋ" },
-    completed: { en: "Completed", pa: "ਪੂਰਾ ਹੋਇਆ" },
-    questions: { en: "Questions", pa: "ਸਵਾਲ" },
-    quiz_done: { en: "Quiz Completed!", pa: "ਕਵਿਜ਼ ਪੂਰਾ ਹੋਇਆ!" },
-    score_msg: { en: "You scored", pa: "ਤੁਹਾਡਾ ਸਕੋਰ" },
-    back: { en: "Back to Quizzes", pa: "ਕਵਿਜ਼ ਤੇ ਵਾਪਸ" }
-  };
-
-  const [quizzes, setQuizzes] = useState([]);
-  const [loadingQuizzes, setLoadingQuizzes] = useState(false);
-  const [quizError, setQuizError] = useState('');
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
-  const [step, setStep] = useState('list'); 
-  const [score, setScore] = useState(0);
-  const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState({});
-  const [submittedQuizIds, setSubmittedQuizIds] = useState(new Set());
-
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        setLoadingQuizzes(true);
-        const res = await api.get('/quizzes');
-        setQuizzes(res.data || []);
-      } catch (err) { setQuizError('Failed to load quizzes.'); } finally { setLoadingQuizzes(false); }
-    };
-    fetchQuizzes();
-  }, []);
-
-  useEffect(() => {
-    const fetchAttempts = async () => {
-      if (!user?.email) return;
-      try {
-        const res = await api.get('/quizzes/attempts/by-student', { params: { email: user.email } });
-        const idSet = new Set((res.data || []).map(a => String(a.quiz)));
-        setSubmittedQuizIds(idSet);
-      } catch (err) { console.error(err); }
-    };
-    fetchAttempts();
-  }, [user]);
-
-  const startQuiz = (quiz) => {
-    if (submittedQuizIds.has(String(quiz._id))) return;
-    setSelectedQuiz(quiz); setQuestions(quiz.questions); setCurrentQuestionIndex(0); setUserAnswers({}); setScore(0); setStep('quiz');
-  };
-
-  const handleOptionSelect = (idx) => setUserAnswers(prev => ({ ...prev, [currentQuestionIndex]: idx }));
-  const handleNext = () => { if (currentQuestionIndex < questions.length - 1) setCurrentQuestionIndex(prev => prev + 1); else finishQuiz(); };
-  const finishQuiz = async () => {
-    let localScore = 0; questions.forEach((q, i) => { if (userAnswers[i] === q.correctIndex) localScore++; });
-    setScore(localScore);
-    try {
-      const answersArray = questions.map((_, i) => userAnswers[i] ?? -1);
-      await api.post(`/quizzes/${selectedQuiz._id}/submit`, { answers: answersArray, name: user?.name, email: user?.email, className: user?.className });
-      setSubmittedQuizIds(prev => new Set(prev).add(String(selectedQuiz._id)));
-    } catch(e) { console.error(e); }
-    setStep('result');
-  };
-
-  if (step === 'quiz' && selectedQuiz) {
-    const currentQ = questions[currentQuestionIndex];
-    return (
-      <div style={{ maxWidth: '800px', margin: '0 auto', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div className="glass-panel" style={{ padding: '40px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', color: '#94a3b8' }}>
-            <span>Question {currentQuestionIndex + 1} / {questions.length}</span>
-            <span style={{ color: 'var(--primary-glow)', fontWeight: 600 }}>{selectedQuiz.title}</span>
-          </div>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '30px', lineHeight: '1.4' }}>{currentQ.questionText}</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '40px' }}>
-            {currentQ.options.map((opt, i) => (
-              <button key={i} onClick={() => handleOptionSelect(i)} style={{ padding: '18px 24px', borderRadius: '16px', textAlign: 'left', fontSize: '1rem', cursor: 'pointer', transition: '0.2s', background: userAnswers[currentQuestionIndex] === i ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.03)', border: userAnswers[currentQuestionIndex] === i ? '1px solid var(--primary-glow)' : '1px solid var(--glass-border)', color: userAnswers[currentQuestionIndex] === i ? 'white' : '#cbd5e1' }}>{opt}</button>
-            ))}
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <button disabled={currentQuestionIndex === 0} onClick={() => setCurrentQuestionIndex(p => p - 1)} style={{ background: 'transparent', border: '1px solid #475569', padding: '10px 24px', borderRadius: '12px', color: '#94a3b8', cursor: currentQuestionIndex===0?'default':'pointer', opacity: currentQuestionIndex===0?0.5:1 }}>Previous</button>
-            <button onClick={handleNext} className="btn-primary" style={{ padding: '10px 30px' }}>{currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next'}</button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (step === 'result') {
-    return (
-      <div style={{ maxWidth: '600px', margin: '0 auto', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="glass-panel" style={{ textAlign: 'center', padding: '50px', width: '100%' }}>
-          <Award size={80} color="var(--primary-glow)" style={{ margin: '0 auto 20px' }} />
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '10px' }} className="gradient-text">{t(content.quiz_done)}</h2>
-          <p style={{ fontSize: '1.2rem', color: '#cbd5e1', marginBottom: '30px' }}>{t(content.score_msg)} {score} out of {questions.length}</p>
-          <button className="btn-primary" onClick={() => { setSelectedQuiz(null); setStep('list'); }}>{t(content.back)}</button>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="gradient-text">{t(content.active_quizzes)}</h1>
-      {loadingQuizzes && <div style={{textAlign:'center', marginTop:'50px'}}><Loader2 className="animate-spin" size={40} color="var(--primary-glow)" /></div>}
-      {!loadingQuizzes && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '25px' }}>
-          {quizzes.length === 0 ? <p style={{color:'#94a3b8'}}>{t(content.no_quiz)}</p> : quizzes.map(q => {
-             const isSubmitted = submittedQuizIds.has(String(q._id));
-             return (
-              <div key={q._id} className="glass-panel" style={{ borderLeft: '4px solid var(--accent-glow)', opacity: isSubmitted ? 0.7 : 1 }}>
-                <h3 style={{ fontSize: '1.4rem', marginBottom: '5px' }}>{q.title}</h3>
-                <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '20px' }}>{q.subject || 'General'} • {q.questions?.length || 0} {t(content.questions)}</p>
-                <button onClick={() => startQuiz(q)} disabled={isSubmitted} className="btn-primary" style={{ width: '100%', background: isSubmitted ? '#334155' : undefined, boxShadow: isSubmitted ? 'none' : undefined }}>
-                  {isSubmitted ? t(content.completed) : t(content.start)}
-                </button>
-              </div>
-             )
-          })}
-        </div>
-      )}
     </div>
   )
 }
@@ -1007,6 +827,9 @@ function AccountSection({ user, setUser, handleLogout }) {
   const [generating, setGenerating] = useState(false);
   const [reveal, setReveal] = useState(false);
 
+  // FIX: Limited to 1-10
+  const classes = Array.from({ length: 10 }, (_, i) => i + 1);
+
   const generateCode = async () => {
     setGenerating(true);
     try {
@@ -1018,13 +841,42 @@ function AccountSection({ user, setUser, handleLogout }) {
     } catch(e){} finally { setGenerating(false); }
   };
 
+  const handleClassUpdate = async (newClass) => {
+    if(!newClass) return;
+    try {
+      const res = await api.patch('/auth/class', { className: String(newClass) });
+      const u = { ...user, className: res.data.className };
+      setUser(u); localStorage.setItem('user', JSON.stringify(u));
+      alert(t({en:"Class updated!", pa:"ਜਮਾਤ ਅੱਪਡੇਟ ਹੋ ਗਈ!"}));
+    } catch(e) { alert(t({en:"Failed to update class", pa:"ਜਮਾਤ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"})); }
+  };
+
   return (
     <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', padding: '50px', textAlign: 'center', background: 'rgba(15, 23, 42, 0.8)' }}>
       <div style={{ width: 120, height: 120, borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-glow), #3b82f6)', margin: '0 auto 25px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.5rem', fontWeight: 800, color: '#0f172a' }}>
         {user?.name?.charAt(0) || 'S'}
       </div>
       <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '5px' }}>{user?.name}</h2>
-      <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '40px' }}>Class {user?.className} • {user?.email}</p>
+      <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '40px' }}>
+        {t({en:"Class", pa:"ਜਮਾਤ"})} {user?.className} • {user?.email}
+      </p>
+
+      {/* Class Selector for Student */}
+      <div style={{ textAlign: 'left', marginBottom: '30px' }}>
+        <label style={{ color: '#94a3b8', fontSize: '0.85rem', display: 'block', marginBottom: '8px' }}>
+           {t({en:"Update Class", pa:"ਜਮਾਤ ਅੱਪਡੇਟ ਕਰੋ"})}
+        </label>
+        <select 
+          className="input-field" 
+          value={user?.className || ""} 
+          onChange={(e) => handleClassUpdate(e.target.value)}
+        >
+          <option value="" disabled>{t({en:"Select Class", pa:"ਜਮਾਤ ਚੁਣੋ"})}</option>
+          {classes.map((cls) => (
+             <option key={cls} value={cls}>{t({en:"Class", pa:"ਜਮਾਤ"})} {cls}</option>
+          ))}
+        </select>
+      </div>
 
       <div style={{ background: 'rgba(0,0,0,0.3)', padding: '20px', borderRadius: '16px', marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.05)' }}>
          <div style={{ textAlign: 'left', display: 'flex', gap: '15px', alignItems: 'center' }}>
