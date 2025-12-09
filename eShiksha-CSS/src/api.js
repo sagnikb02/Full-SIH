@@ -3,14 +3,14 @@ import axios from "axios";
 
 // Auto-detect environment
 const API_BASE_URL = import.meta.env.PROD
-  ? "https://sih-final-file.onrender.com/api"  // Render backend URL
-  : "http://localhost:5000/api";               // Local backend URL
+  ? "https://sih-pgbhh.onrender.com/api"  // <-- Your real backend URL
+  : "http://localhost:5000/api";          // For development
 
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Add JWT token automatically
+// Add JWT token automatically for protected routes
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
