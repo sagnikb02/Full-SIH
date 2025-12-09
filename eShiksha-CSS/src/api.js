@@ -1,14 +1,12 @@
 // src/api.js
 import axios from "axios";
 
-// Always use production Render backend
-const API_BASE_URL = "https://sih-pgbhh.onrender.com/api";
-
+// FINAL — Always use LIVE BACKEND URL
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "https://backend-sih-nkv5.onrender.com/api",  // UPDATED
 });
 
-// Add JWT token automatically
+// Attach token automatically for protected routes
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
