@@ -1,0 +1,250 @@
+/* src/index.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* ============================================================
+   GLOBAL VARIABLES (Responsive using clamp & media queries)
+============================================================ */
+:root {
+  --primary: #1E88E5;
+  --accent: #FF8A50;
+  --success: #40FFB3;
+  --bg-dark: #020617;
+  --bg-darker: #000000;
+
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+
+  /* --- Responsive Font Sizes --- */
+  --font-xs: clamp(10px, 1vw, 12px);
+  --font-sm: clamp(12px, 1.2vw, 14px);
+  --font-md: clamp(14px, 1.4vw, 16px);
+  --font-lg: clamp(16px, 1.8vw, 22px);
+  --font-xl: clamp(20px, 2.4vw, 28px);
+
+  /* --- Responsive Spacing (padding/margins) --- */
+  --space-xs: clamp(4px, 0.7vw, 8px);
+  --space-sm: clamp(8px, 1vw, 12px);
+  --space-md: clamp(12px, 1.4vw, 18px);
+  --space-lg: clamp(16px, 2vw, 28px);
+  --space-xl: clamp(20px, 2.6vw, 36px);
+
+  /* --- Radius --- */
+  --radius-sm: 8px;
+  --radius-md: clamp(10px, 1.6vw, 16px);
+  --radius-lg: clamp(16px, 2vw, 24px);
+}
+
+/* ============================================================
+   RESET + GLOBAL SCROLLBAR HIDING
+============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html, body {
+  -ms-overflow-style: none;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  font-size: var(--font-md);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ============================================================
+   UNIVERSAL LAYOUTS (Responsive)
+============================================================ */
+.container {
+  max-width: clamp(960px, 92vw, 1320px);
+  margin: 0 auto;
+  padding: var(--space-md);
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .flex-between {
+    flex-wrap: wrap;
+    row-gap: var(--space-sm);
+  }
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(220px, 40vw, 340px), 1fr)
+  );
+  gap: var(--space-lg);
+}
+
+.section {
+  width: 100%;
+  padding: var(--space-lg) 0;
+}
+
+/* ============================================================
+   CARDS & GLASS EFFECTS
+============================================================ */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 0 25px rgba(255,255,255,0.06);
+  transform: translateY(-3px);
+}
+
+/* ============================================================
+   BUTTONS (Responsive)
+============================================================ */
+.btn-primary {
+  background: linear-gradient(90deg, var(--primary), #2563eb);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--font-md);
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(30, 136, 229, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   INPUT FIELDS (Responsive)
+============================================================ */
+.input-field {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid #334155;
+  color: white;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  outline: none;
+  font-size: var(--font-md);
+  transition: 0.3s;
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  background: rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   RESPONSIVE MEDIA QUERIES
+============================================================ */
+@media (max-width: 1200px) {
+  .container {
+    padding: var(--space-sm);
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    font-size: var(--font-sm);
+  }
+  .glass-card {
+    padding: var(--space-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: var(--space-sm);
+  }
+  .grid-layout {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-md);
+  }
+  .btn-primary {
+    font-size: var(--font-sm);
+    padding: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-xs);
+  }
+  .glass-card {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+  }
+  body {
+    font-size: var(--font-xs);
+  }
+}
+/* Add this to src/index.css */
+
+/* 1. Safe Gradient Text Class for Punjabi Headers */
+.gradient-text-safe {
+  background: linear-gradient(180deg, #fff 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  
+  /* PREVENTS CUTTING OFF TOP/BOTTOM OF PUNJABI LETTERS */
+  line-height: 1.5 !important; 
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  display: inline-block;
+}
+
+/* 2. Set font globally */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
