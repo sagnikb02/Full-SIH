@@ -23,22 +23,17 @@ export default function StudentDashboard() {
 
   // 3. DEFINE TRANSLATIONS
   const content = {
-    // Sidebar
     nav_home: { en: "Home", pa: "ਘਰ" },
     nav_hub: { en: "Learning Hub", pa: "ਲਰਨਿੰਗ ਹੱਬ" },
     nav_down: { en: "Downloads", pa: "ਡਾਊਨਲੋਡ" },
     nav_play: { en: "Playlist", pa: "ਪਲੇਲਿਸਟ" },
     nav_acc: { en: "Account", pa: "ਖਾਤਾ" },
 
-    // Welcome Section
     welcome: { en: "Welcome", pa: "ਜੀ ਆਇਆਂ ਨੂੰ" },
     subtitle: { en: "Your intelligence hub is online.", pa: "ਤੁਹਾਡਾ ਇੰਟੈਲੀਜੈਂਸ ਹੱਬ ਔਨਲਾਈਨ ਹੈ।" },
-    
-    // Marquee Headers
     feat: { en: "Features", pa: "ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ" },
     skills: { en: "Your Skills", pa: "ਤੁਹਾਡੇ ਹੁਨਰ" },
 
-    // Offers
     live_cls: { en: "Live Classes", pa: "ਲਾਈਵ ਕਲਾਸਾਂ" },
     desc_live: { en: "Interactive streaming", pa: "ਇੰਟਰਐਕਟਿਵ ਸਟ੍ਰੀਮਿੰਗ" },
     prem_crs: { en: "Prem. Courses", pa: "ਪ੍ਰੀਮੀਅਮ ਕੋਰਸ" },
@@ -52,7 +47,6 @@ export default function StudentDashboard() {
     updates: { en: "Class Updates", pa: "ਜਮਾਤ ਅੱਪਡੇਟ" },
     desc_updates: { en: "Important announcements", pa: "ਮਹੱਤਵਪੂਰਨ ਐਲਾਨ" },
 
-    // Subjects (Display Names)
     sci: { en: "Science", pa: "ਵਿਗਿਆਨ" },
     sst: { en: "SST", pa: "ਸਮਾਜਿਕ ਸਿੱਖਿਆ" },
     math: { en: "Maths", pa: "ਗਣਿਤ" },
@@ -61,7 +55,6 @@ export default function StudentDashboard() {
     misc: { en: "Misc", pa: "ਫੁਟਕਲ" },
   };
 
-  // MOCK DATA
   const OFFERS = [
     { icon: <Tv />, title: t(content.live_cls), desc: t(content.desc_live), color: "#3b82f6" },
     { icon: <BookOpen />, title: t(content.prem_crs), desc: t(content.desc_prem), color: "#8b5cf6" },
@@ -71,7 +64,6 @@ export default function StudentDashboard() {
     { icon: <Calendar />, title: t(content.updates), desc: t(content.desc_updates), color: "#06b6d4" },
   ];
 
-  // DATA IDS MATCH DATABASE (English), NAMES MATCH TRANSLATION
   const SUBJECTS_DATA = [
     { id: "Science", name: t(content.sci), color: "#06b6d4", count: 24 },
     { id: "SST", name: t(content.sst), color: "#8b5cf6", count: 18 },
@@ -124,27 +116,51 @@ export default function StudentDashboard() {
           width: 90px; height: 100vh;
           background: rgba(15, 23, 42, 0.9);
           border-right: 1px solid var(--glass-border);
-          display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+          display: flex; 
+          flex-direction: column; 
+          align-items: center;
+          /* Space between pushes the top icons up and account icon down */
+          justify-content: space-between; 
           padding: 2rem 0;
           backdrop-filter: blur(20px); z-index: 100;
           transition: all 0.3s ease;
         }
-        
-        .nav-group { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; align-items: center; }
 
-        /* Mobile Bottom Nav */
+        /* Container for icons in sidebar */
+        .nav-group {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+          width: 100%;
+          align-items: center;
+        }
+
+        /* MOBILE SIDEBAR (BOTTOM NAV) */
         @media (max-width: 768px) {
           .dashboard-wrapper { flex-direction: column-reverse; } 
+          
           .sidebar {
-            width: 100vw; height: 75px;
-            flex-direction: row; justify-content: space-evenly;
-            align-items: center; padding: 0 10px;
-            border-right: none; border-top: 1px solid var(--glass-border);
+            width: 100vw; 
+            height: 75px; /* Fixed height for bottom bar */
+            flex-direction: row; 
+            justify-content: space-evenly; /* Distribute all icons evenly */
+            align-items: center;
+            padding: 0 10px;
+            border-right: none; 
+            border-top: 1px solid var(--glass-border);
             position: fixed; bottom: 0; left: 0; 
             background: rgba(2, 6, 23, 0.98); 
             box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
           }
-          .nav-group { flex-direction: row; justify-content: space-evenly; gap: 0; width: 100%; }
+          
+          /* Change inner groups to row for mobile and remove vertical gaps */
+          .nav-group {
+            flex-direction: row;
+            justify-content: space-evenly;
+            gap: 1rem; /* Smaller gap on mobile */
+            width: auto;
+            margin-bottom: 0 !important; /* Override inline styles */
+          }
         }
 
         .nav-icon-box {
@@ -166,24 +182,19 @@ export default function StudentDashboard() {
         .main-content {
           flex: 1; height: 100vh; overflow-y: auto;
           padding: 2rem 3rem; position: relative;
-          padding-bottom: 120px; /* Space for mobile nav */
+          padding-bottom: 120px; /* EXTRA PADDING so content isn't hidden behind nav */
         }
         .main-content::-webkit-scrollbar { width: 6px; }
         .main-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 
         @media (max-width: 768px) {
-          .main-content { padding: 1.5rem; height: 100vh; padding-bottom: 120px; }
+          .main-content { 
+            padding: 1.5rem; 
+            /* Ensure bottom padding is enough for the fixed nav */
+            padding-bottom: 100px; 
+          }
         }
 
-        /* --- TYPOGRAPHY & GRADIENTS --- */
-        .title-orange {
-          font-weight: 800;
-          background: linear-gradient(to right, #ffedd5, #fb923c, #f97316, #ea580c, #ffedd5);
-          background-size: 200% auto;
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          animation: shine 5s linear infinite;
-          line-height: 1.6; padding-top: 5px; padding-bottom: 5px; display: inline-block;
-        }
         .gradient-text {
           background: linear-gradient(90deg, #ffffff 0%, #38bdf8 50%, #818cf8 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -192,125 +203,40 @@ export default function StudentDashboard() {
         }
         @keyframes shine { to { background-position: 200% center; } }
 
-        .section-header {
-          font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase;
-          color: #64748b; font-weight: 700; margin-bottom: 20px;
-          display: flex; align-items: center; gap: 12px;
-        }
+        .section-header { font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
         .section-header::after { content: ''; height: 1px; flex: 1; background: linear-gradient(90deg, var(--glass-border), transparent); }
 
-        .glass-panel {
-          background: var(--glass-surface);
-          border: 1px solid var(--glass-border);
-          border-radius: 20px; padding: 24px;
-          backdrop-filter: blur(12px);
-        }
-
-        .btn-primary {
-          background: linear-gradient(135deg, var(--primary-glow), #22d3ee); 
-          color: #0f172a; border: none; padding: 10px 20px; border-radius: 10px;
-          font-weight: 700; cursor: pointer; transition: 0.2s;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-          box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
-        }
+        .glass-panel { background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary-glow), #22d3ee); color: #0f172a; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
         .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-
-        .search-input {
-          width: 100%; padding: 12px 20px; border-radius: 50px;
-          background: rgba(15,23,42,0.8); border: 1px solid var(--glass-border);
-          color: white; font-size: 1rem; outline: none; transition: 0.3s;
-        }
+        .search-input { width: 100%; padding: 12px 20px; border-radius: 50px; background: rgba(15,23,42,0.8); border: 1px solid var(--glass-border); color: white; font-size: 1rem; outline: none; transition: 0.3s; }
         .search-input:focus { border-color: var(--primary-glow); box-shadow: 0 0 15px rgba(6,182,212,0.1); }
-        .input-field {
-          width: 100%; padding: 12px 16px; border-radius: 12px;
-          background: rgba(15,23,42,0.8); border: 1px solid var(--glass-border);
-          color: white; font-size: 0.95rem; outline: none; transition: 0.3s;
-        }
-
-        /* --- RESPONSIVE GRIDS --- */
+        
         .carousel-track { display: flex; gap: 24px; padding: 10px 0; width: max-content; }
-        
-        .offer-card {
-          width: 240px; height: 160px;
-          background: linear-gradient(160deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-          border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px;
-          display: flex; flex-direction: column; justify-content: space-between;
-          flex-shrink: 0; transition: all 0.3s;
-        }
+        .offer-card { width: 240px; height: 160px; background: linear-gradient(160deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; transition: all 0.3s; }
         .offer-card:hover { border-color: var(--card-color); transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
-
-        .tech-chip {
-          padding: 10px 24px; background: rgba(255,255,255,0.02);
-          border: 1px solid var(--glass-border); border-radius: 99px;
-          font-size: 0.95rem; font-weight: 500; color: #cbd5e1; white-space: nowrap; flex-shrink: 0;
-        }
-
-        /* --- SEARCH LAYOUT --- */
-        .subject-grid {
-          display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px;
-        }
+        .tech-chip { padding: 10px 24px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 99px; font-size: 0.95rem; font-weight: 500; color: #cbd5e1; white-space: nowrap; flex-shrink: 0; }
         
-        .subject-card {
-          aspect-ratio: 1;
-          background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent);
-          border: 1px solid var(--glass-border); border-radius: 24px;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          cursor: pointer; transition: all 0.3s;
-        }
-        .subject-card:hover {
-          background: linear-gradient(135deg, rgba(6,182,212,0.1), transparent);
-          border-color: var(--primary-glow); transform: translateY(-5px);
-        }
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+        .subject-card { aspect-ratio: 1; background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent); border: 1px solid var(--glass-border); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; }
+        .subject-card:hover { background: linear-gradient(135deg, rgba(6,182,212,0.1), transparent); border-color: var(--primary-glow); transform: translateY(-5px); }
         .subject-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; color: var(--text-main); }
-
-        .split-view {
-          display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: 100%;
-        }
+        
+        .split-view { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: 100%; }
         @media (max-width: 1024px) { .split-view { grid-template-columns: 1fr; } }
-
-        .video-seq-item {
-          display: flex; gap: 15px; padding: 15px;
-          background: rgba(255,255,255,0.02); border: 1px solid transparent;
-          border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
-          align-items: center;
-        }
+        .video-seq-item { display: flex; gap: 15px; padding: 15px; background: rgba(255,255,255,0.02); border: 1px solid transparent; border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; align-items: center; }
         .video-seq-item:hover { background: rgba(255,255,255,0.05); border-color: var(--primary-glow); transform: translateX(5px); }
-
-        /* --- VIDEO PLAYER UI --- */
-        .video-page-wrapper {
-          display: flex; flex-direction: column; width: 100%; max-width: 1200px; margin: 0 auto;
-        }
         
-        .player-frame {
-          width: 100%; height: 60vh; /* Fixed height for cinema feel */
-          background: black; border-radius: 20px; overflow: hidden;
-          box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8);
-        }
+        .video-page-wrapper { display: flex; flex-direction: column; width: 100%; max-width: 1200px; margin: 0 auto; }
+        .player-frame { width: 100%; height: 60vh; background: black; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8); }
         @media (max-width: 768px) { .player-frame { height: 40vh; } }
-
-        .video-meta-bar {
-          display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 15px;
-        }
-        
-        .action-btn {
-          display: flex; align-items: center; gap: 8px;
-          padding: 8px 16px; border-radius: 30px;
-          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05);
-          color: #e2e8f0; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: 0.2s;
-        }
+        .action-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 30px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); color: #e2e8f0; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
         .action-btn:hover { background: rgba(6,182,212,0.15); border-color: var(--primary-glow); color: white; }
-
-        /* FIXED HEIGHT TABS CONTAINER */
-        .tabs-container {
-          margin-top: 40px; background: rgba(255,255,255,0.02);
-          border-radius: 24px; padding: 30px; border: 1px solid var(--glass-border);
-          min-height: 400px; /* Prevents jumping */
-        }
+        .tabs-container { margin-top: 40px; background: rgba(255,255,255,0.02); border-radius: 24px; padding: 30px; border: 1px solid var(--glass-border); min-height: 400px; }
         @media (max-width: 600px) { .tabs-container { padding: 15px; } }
-
       `}</style>
 
-      {/* SIDEBAR */}
+      {/* SIDEBAR - Fixed Structure for Mobile/Desktop */}
       <nav className="sidebar">
         {/* Main Icons Group */}
         <div className="nav-group">
@@ -320,8 +246,8 @@ export default function StudentDashboard() {
           <NavIcon icon={<ListVideo size={24} />} id="saved" active={activeTab} set={setActiveTab} tooltip={t(content.nav_play)} />
         </div>
         
-        {/* Footer Icons (Account) */}
-        <div className="nav-group nav-spacer-bottom" style={{ marginBottom: '2rem' }}>
+        {/* Account Icon Group - Now visible on mobile! */}
+        <div className="nav-group">
            <NavIcon icon={<User size={24} />} id="account" active={activeTab} set={setActiveTab} tooltip={t(content.nav_acc)} />
         </div>
       </nav>
@@ -338,7 +264,7 @@ export default function StudentDashboard() {
           {activeTab === 'home' && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div style={{ marginBottom: '3rem', marginTop: '1rem' }}>
-                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, margin: 0 }} className="title-orange">
+                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, margin: 0 }} className="gradient-text">
                   {t(content.welcome)}, {user?.name?.split(' ')[0] || 'Student'}.
                 </h1>
                 <p style={{ fontSize: '1.1rem', color: '#64748b', marginTop: '10px' }}>{t(content.subtitle)}</p>
@@ -421,52 +347,6 @@ function NavIcon({ icon, id, active, set, tooltip }) {
   )
 }
 
-/* === CLASS UPDATES SECTION === */
-function NewsSection({ user }) {
-  const { t } = useLanguage();
-  const content = {
-    header: { en: "Class Updates", pa: "ਜਮਾਤ ਅੱਪਡੇਟ" },
-    loading: { en: "Loading…", pa: "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ..." },
-    no_updates: { en: "No updates from your teacher yet.", pa: "ਤੁਹਾਡੇ ਅਧਿਆਪਕ ਵੱਲੋਂ ਅਜੇ ਕੋਈ ਅੱਪਡੇਟ ਨਹੀਂ।" },
-    fail_load: { en: "Failed to load class updates.", pa: "ਕਲਾਸ ਅੱਪਡੇਟ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ।" }
-  };
-
-  const [updates, setUpdates] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!user?.className) { setUpdates([]); return; }
-    const fetchUpdates = async () => {
-      try {
-        setLoading(true); setError('');
-        const res = await api.get('/class-updates', { params: { className: user.className, limit: 5 } });
-        setUpdates(res.data || []);
-      } catch (e) { console.error(e); setError(t(content.fail_load)); } finally { setLoading(false); }
-    };
-    fetchUpdates();
-  }, [user?.className, t]);
-
-  return (
-    <div>
-      <div className="section-header gradient-text" style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}>{t(content.header)}</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-        {loading && <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>{t(content.loading)}</p>}
-        {error && <p style={{ color: '#f97373', fontSize: '0.9rem' }}>{error}</p>}
-        {!loading && !error && updates.length === 0 && <p style={{ color: '#64748b', fontSize: '0.9rem' }}>{t(content.no_updates)}</p>}
-        {!loading && !error && updates.map((u) => (
-            <div key={u._id} className="glass-panel" style={{ borderLeft: '3px solid var(--primary-glow)', padding: '20px' }}>
-              <h4 style={{ fontSize: '1rem', marginBottom: '8px', fontWeight: 600 }}>{u.text}</h4>
-              <div style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', justifyContent: 'space-between' }}>
-                <span>{u.authorName || 'Teacher'}</span><span>{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : ''}</span>
-              </div>
-            </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 /* === LEARNING HUB LOGIC === */
 function LearningHub({ user, subjectsData }) {
   const { t } = useLanguage(); 
@@ -499,6 +379,7 @@ function LearningHub({ user, subjectsData }) {
   // GLITCH FIX: Store the ID (which is stable) instead of the whole object (which changes with translation)
   const [selectedSubjectId, setSelectedSubjectId] = useState(null);
   
+  // Computed property to get the full subject object based on ID
   const selectedSubject = useMemo(() => {
     return subjectsData.find(s => s.id === selectedSubjectId);
   }, [subjectsData, selectedSubjectId]);
@@ -594,7 +475,7 @@ function LearningHub({ user, subjectsData }) {
           <button onClick={handleBack} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', padding: '12px', color: 'white', cursor: 'pointer' }}><ChevronLeft size={24} /></button>
         )}
         <div style={{ flex: 1 }}>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, margin: 0 }} className="title-orange">
+          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, margin: 0 }} className="gradient-text">
             {viewState === 'subjects' ? t(content.hub_title) : viewState === 'list' ? selectedSubject?.name : t(content.now_playing)}
           </h2>
         </div>
@@ -624,17 +505,17 @@ function LearningHub({ user, subjectsData }) {
               {subjectVideos.length === 0 ? (
                 <p style={{ color: '#64748b' }}>{t(content.no_vid)}</p>
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
-                  {subjectVideos.map((video, idx) => (
-                    <div key={video._id} onClick={() => handleVideoClick(video)} style={{ cursor: 'pointer' }}>
-                      <div style={{ height: '130px', background: '#1e1e1e', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                         <Play size={30} color="white" />
-                      </div>
-                      <h4 style={{ fontSize: '1rem', marginTop: '10px', fontWeight: 600 }}>{video.title}</h4>
+                subjectVideos.map((video, idx) => (
+                  <div key={video._id} className="video-seq-item" onClick={() => handleVideoClick(video)}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'rgba(255,255,255,0.1)', width: '40px', display: 'flex', alignItems: 'center' }}>{(idx + 1).toString().padStart(2, '0')}</div>
+                    <div style={{ width: '140px', height: '80px', background: '#0f172a', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Play size={32} fill="white" /></div>
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '4px' }}>{video.title}</h4>
                       <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Class {video.className} • {video.subject}</p>
                     </div>
-                  ))}
-                </div>
+                    <ChevronRight size={24} color="#64748b" />
+                  </div>
+                ))
               )}
             </div>
             <div className="scroll-col" style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
@@ -725,11 +606,8 @@ function LearningHub({ user, subjectsData }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
                 {subjectVideos.filter((v) => v._id !== selectedVideo._id).map((vid, i) => (
                   <div key={vid._id || i} onClick={() => handleVideoClick(vid)} style={{ cursor: 'pointer' }}>
-                    <div style={{ height: '130px', background: '#1e1e1e', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                       <Play size={30} color="white" />
-                    </div>
-                    <h4 style={{ fontSize: '1rem', marginTop: '10px', fontWeight: 600 }}>{vid.title}</h4>
-                    <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Class {vid.className} • {vid.subject}</p>
+                    <div style={{ height: '130px', background: '#1e293b', borderRadius: '12px', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Play size={30} fill="white" /></div>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>{vid.title}</h4>
                   </div>
                 ))}
                 {subjectVideos.length <= 1 && <p style={{ color: '#64748b' }}>{t(content.no_vid)}</p>}
@@ -742,13 +620,132 @@ function LearningHub({ user, subjectsData }) {
   );
 }
 
+/* === CLASS UPDATES SECTION === */
+function NewsSection({ user }) {
+  const { t } = useLanguage();
+  const content = {
+    header: { en: "Class Updates", pa: "ਜਮਾਤ ਅੱਪਡੇਟ" },
+    loading: { en: "Loading…", pa: "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ..." },
+    no_updates: {
+      en: "No updates from your teacher yet.",
+      pa: "ਤੁਹਾਡੇ ਅਧਿਆਪਕ ਵੱਲੋਂ ਅਜੇ ਕੋਈ ਅੱਪਡੇਟ ਨਹੀਂ।"
+    },
+    fail_load: {
+      en: "Failed to load class updates.",
+      pa: "ਕਲਾਸ ਅੱਪਡੇਟ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ।"
+    }
+  };
+
+  const [updates, setUpdates] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!user?.className) {
+      setUpdates([]);
+      return;
+    }
+
+    const fetchUpdates = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const res = await api.get('/class-updates', {
+          params: { className: user.className, limit: 5 },
+        });
+        setUpdates(res.data || []);
+      } catch (e) {
+        console.error(e);
+        setError(t(content.fail_load));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUpdates();
+  }, [user?.className, t]);
+
+  return (
+    <div>
+      <div
+        className="section-header gradient-text"
+        style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}
+      >
+        {t(content.header)}
+      </div>
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '20px',
+        }}
+      >
+        {loading && (
+          <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
+            {t(content.loading)}
+          </p>
+        )}
+
+        {error && (
+          <p style={{ color: '#f97373', fontSize: '0.9rem' }}>{error}</p>
+        )}
+
+        {!loading && !error && updates.length === 0 && (
+          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+            {t(content.no_updates)}
+          </p>
+        )}
+
+        {!loading &&
+          !error &&
+          updates.map((u) => (
+            <div
+              key={u._id}
+              className="glass-panel"
+              style={{
+                borderLeft: '3px solid var(--primary-glow)',
+                padding: '20px',
+              }}
+            >
+              <h4
+                style={{
+                  fontSize: '1rem',
+                  marginBottom: '8px',
+                  fontWeight: 600,
+                }}
+              >
+                {u.message}
+              </h4>
+              <div
+                style={{
+                  fontSize: '0.8rem',
+                  color: '#94a3b8',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span>{u.teacherName || 'Teacher'}</span>
+                <span>
+                  {u.createdAt
+                    ? new Date(u.createdAt).toLocaleDateString()
+                    : ''}
+                </span>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
+}
+
 
 /* === INDEPENDENT PAGES === */
 function DownloadPage() {
   const { t } = useLanguage();
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="title-orange">{t({ en: "Offline Downloads", pa: "ਔਫਲਾਈਨ ਡਾਊਨਲੋਡ" })}</h1>
+      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="gradient-text">{t({ en: "Offline Downloads", pa: "ਔਫਲਾਈਨ ਡਾਊਨਲੋਡ" })}</h1>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
         {[1, 2, 3].map(i => (
           <div key={i} className="glass-panel" style={{ padding: '20px' }}>
@@ -767,13 +764,17 @@ function PlaylistPage() {
   const { t } = useLanguage();
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="title-orange">{t({ en: "Saved Playlist", pa: "ਸੁਰੱਖਿਅਤ ਪਲੇਲਿਸਟ" })}</h1>
+      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="gradient-text">{t({ en: "Saved Playlist", pa: "ਸੁਰੱਖਿਅਤ ਪਲੇਲਿਸਟ" })}</h1>
       <div style={{ textAlign: 'center', padding: '100px', color: '#64748b' }}>
         <ListVideo size={64} style={{ marginBottom: '20px', opacity: 0.5 }} />
         <p style={{ fontSize: '1.2rem' }}>{t({ en: "Your playlist is empty. Add videos from the Learning Hub.", pa: "ਤੁਹਾਡੀ ਪਲੇਲਿਸਟ ਖਾਲੀ ਹੈ। ਲਰਨਿੰਗ ਹੱਬ ਤੋਂ ਵੀਡੀਓ ਸ਼ਾਮਲ ਕਰੋ।" })}</p>
       </div>
     </div>
   )
+}
+
+function QuizPage() {
+  return null; // Removed
 }
 
 /* === WIDGETS === */
@@ -829,9 +830,6 @@ function AccountSection({ user, setUser, handleLogout }) {
   const [generating, setGenerating] = useState(false);
   const [reveal, setReveal] = useState(false);
 
-  // FIX: Limited to 1-10
-  const classes = Array.from({ length: 10 }, (_, i) => i + 1);
-
   const generateCode = async () => {
     setGenerating(true);
     try {
@@ -843,42 +841,13 @@ function AccountSection({ user, setUser, handleLogout }) {
     } catch(e){} finally { setGenerating(false); }
   };
 
-  const handleClassUpdate = async (newClass) => {
-    if(!newClass) return;
-    try {
-      const res = await api.patch('/auth/class', { className: String(newClass) });
-      const u = { ...user, className: res.data.className };
-      setUser(u); localStorage.setItem('user', JSON.stringify(u));
-      alert(t({en:"Class updated!", pa:"ਜਮਾਤ ਅੱਪਡੇਟ ਹੋ ਗਈ!"}));
-    } catch(e) { alert(t({en:"Failed to update class", pa:"ਜਮਾਤ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"})); }
-  };
-
   return (
     <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', padding: '50px', textAlign: 'center', background: 'rgba(15, 23, 42, 0.8)' }}>
       <div style={{ width: 120, height: 120, borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-glow), #3b82f6)', margin: '0 auto 25px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.5rem', fontWeight: 800, color: '#0f172a' }}>
         {user?.name?.charAt(0) || 'S'}
       </div>
       <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '5px' }}>{user?.name}</h2>
-      <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '40px' }}>
-        {t({en:"Class", pa:"ਜਮਾਤ"})} {user?.className} • {user?.email}
-      </p>
-
-      {/* Class Selector for Student */}
-      <div style={{ textAlign: 'left', marginBottom: '30px' }}>
-        <label style={{ color: '#94a3b8', fontSize: '0.85rem', display: 'block', marginBottom: '8px' }}>
-           {t({en:"Update Class", pa:"ਜਮਾਤ ਅੱਪਡੇਟ ਕਰੋ"})}
-        </label>
-        <select 
-          className="input-field" 
-          value={user?.className || ""} 
-          onChange={(e) => handleClassUpdate(e.target.value)}
-        >
-          <option value="" disabled>{t({en:"Select Class", pa:"ਜਮਾਤ ਚੁਣੋ"})}</option>
-          {classes.map((cls) => (
-             <option key={cls} value={cls}>{t({en:"Class", pa:"ਜਮਾਤ"})} {cls}</option>
-          ))}
-        </select>
-      </div>
+      <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '40px' }}>Class {user?.className} • {user?.email}</p>
 
       <div style={{ background: 'rgba(0,0,0,0.3)', padding: '20px', borderRadius: '16px', marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.05)' }}>
          <div style={{ textAlign: 'left', display: 'flex', gap: '15px', alignItems: 'center' }}>
