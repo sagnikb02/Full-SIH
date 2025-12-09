@@ -106,7 +106,7 @@ router.post(
       }
 
       const baseUrl =
-        process.env.BACKEND_PUBLIC_URL || 'https://backend-sih-nkv5.onrender.com';
+        process.env.BACKEND_PUBLIC_URL || 'https://full-sih.onrender.com';
 
       // VIDEO
       const videoFilePath = `/uploads/videos/${videoFile.filename}`;
