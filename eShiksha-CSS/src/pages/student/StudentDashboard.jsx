@@ -23,17 +23,22 @@ export default function StudentDashboard() {
 
   // 3. DEFINE TRANSLATIONS
   const content = {
+    // Sidebar
     nav_home: { en: "Home", pa: "ਘਰ" },
     nav_hub: { en: "Learning Hub", pa: "ਲਰਨਿੰਗ ਹੱਬ" },
     nav_down: { en: "Downloads", pa: "ਡਾਊਨਲੋਡ" },
     nav_play: { en: "Playlist", pa: "ਪਲੇਲਿਸਟ" },
     nav_acc: { en: "Account", pa: "ਖਾਤਾ" },
 
+    // Welcome Section
     welcome: { en: "Welcome", pa: "ਜੀ ਆਇਆਂ ਨੂੰ" },
     subtitle: { en: "Your intelligence hub is online.", pa: "ਤੁਹਾਡਾ ਇੰਟੈਲੀਜੈਂਸ ਹੱਬ ਔਨਲਾਈਨ ਹੈ।" },
+    
+    // Marquee Headers
     feat: { en: "Features", pa: "ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ" },
     skills: { en: "Your Skills", pa: "ਤੁਹਾਡੇ ਹੁਨਰ" },
 
+    // Offers
     live_cls: { en: "Live Classes", pa: "ਲਾਈਵ ਕਲਾਸਾਂ" },
     desc_live: { en: "Interactive streaming", pa: "ਇੰਟਰਐਕਟਿਵ ਸਟ੍ਰੀਮਿੰਗ" },
     prem_crs: { en: "Prem. Courses", pa: "ਪ੍ਰੀਮੀਅਮ ਕੋਰਸ" },
@@ -47,6 +52,7 @@ export default function StudentDashboard() {
     updates: { en: "Class Updates", pa: "ਜਮਾਤ ਅੱਪਡੇਟ" },
     desc_updates: { en: "Important announcements", pa: "ਮਹੱਤਵਪੂਰਨ ਐਲਾਨ" },
 
+    // Subjects
     sci: { en: "Science", pa: "ਵਿਗਿਆਨ" },
     sst: { en: "SST", pa: "ਸਮਾਜਿਕ ਸਿੱਖਿਆ" },
     math: { en: "Maths", pa: "ਗਣਿਤ" },
@@ -55,6 +61,7 @@ export default function StudentDashboard() {
     misc: { en: "Misc", pa: "ਫੁਟਕਲ" },
   };
 
+  // MOCK DATA
   const OFFERS = [
     { icon: <Tv />, title: t(content.live_cls), desc: t(content.desc_live), color: "#3b82f6" },
     { icon: <BookOpen />, title: t(content.prem_crs), desc: t(content.desc_prem), color: "#8b5cf6" },
@@ -116,12 +123,8 @@ export default function StudentDashboard() {
           width: 90px; height: 100vh;
           background: rgba(15, 23, 42, 0.9);
           border-right: 1px solid var(--glass-border);
-          display: flex; 
-          flex-direction: column; 
-          align-items: center;
-          /* Space between pushes the top icons up and account icon down */
-          justify-content: space-between; 
-          padding: 2rem 0;
+          display: flex; flex-direction: column; align-items: center;
+          padding-top: 2rem; gap: 1.5rem;
           backdrop-filter: blur(20px); z-index: 100;
           transition: all 0.3s ease;
         }
@@ -138,29 +141,29 @@ export default function StudentDashboard() {
         /* MOBILE SIDEBAR (BOTTOM NAV) */
         @media (max-width: 768px) {
           .dashboard-wrapper { flex-direction: column-reverse; } 
-          
           .sidebar {
-            width: 100vw; 
-            height: 75px; /* Fixed height for bottom bar */
+            width: 100vw; height: 75px;
             flex-direction: row; 
-            justify-content: space-evenly; /* Distribute all icons evenly */
+            justify-content: space-evenly;
             align-items: center;
             padding: 0 10px;
             border-right: none; 
             border-top: 1px solid var(--glass-border);
             position: fixed; bottom: 0; left: 0; 
-            background: rgba(2, 6, 23, 0.98); 
+            background: rgba(2, 6, 23, 0.95); /* darker for mobile readability */
             box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
           }
           
-          /* Change inner groups to row for mobile and remove vertical gaps */
+          /* Change inner group to row for mobile */
           .nav-group {
             flex-direction: row;
             justify-content: space-evenly;
-            gap: 1rem; /* Smaller gap on mobile */
-            width: auto;
-            margin-bottom: 0 !important; /* Override inline styles */
+            gap: 0;
+            width: 100%;
           }
+          
+          /* Hide spacer on mobile if needed, or adjust */
+          .nav-spacer-bottom { display: none; }
         }
 
         .nav-icon-box {
@@ -182,72 +185,158 @@ export default function StudentDashboard() {
         .main-content {
           flex: 1; height: 100vh; overflow-y: auto;
           padding: 2rem 3rem; position: relative;
-          padding-bottom: 120px; /* EXTRA PADDING so content isn't hidden behind nav */
+          padding-bottom: 120px; /* Extra padding for bottom nav */
         }
         .main-content::-webkit-scrollbar { width: 6px; }
         .main-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 
         @media (max-width: 768px) {
-          .main-content { 
-            padding: 1.5rem; 
-            /* Ensure bottom padding is enough for the fixed nav */
-            padding-bottom: 100px; 
-          }
+          .main-content { padding: 1.5rem; height: 100vh; padding-bottom: 100px; }
         }
 
+        /* --- TYPOGRAPHY & GRADIENTS --- */
         .gradient-text {
           background: linear-gradient(90deg, #ffffff 0%, #38bdf8 50%, #818cf8 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-size: 200% auto; animation: shine 5s linear infinite;
-          line-height: 1.6; padding-top: 5px; padding-bottom: 5px; display: inline-block;
+          
+          /* CRITICAL FOR PUNJABI FONT */
+          line-height: 1.6; 
+          padding-top: 5px;
+          padding-bottom: 5px;
+          display: inline-block;
         }
         @keyframes shine { to { background-position: 200% center; } }
 
-        .section-header { font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .section-header {
+          font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase;
+          color: #64748b; font-weight: 700; margin-bottom: 20px;
+          display: flex; align-items: center; gap: 12px;
+        }
         .section-header::after { content: ''; height: 1px; flex: 1; background: linear-gradient(90deg, var(--glass-border), transparent); }
 
-        .glass-panel { background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); }
-        .btn-primary { background: linear-gradient(135deg, var(--primary-glow), #22d3ee); color: #0f172a; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
+        /* --- UTILS --- */
+        .glass-panel {
+          background: var(--glass-surface);
+          border: 1px solid var(--glass-border);
+          border-radius: 20px; padding: 24px;
+          backdrop-filter: blur(12px);
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, var(--primary-glow), #22d3ee); 
+          color: #0f172a; border: none; padding: 10px 20px; border-radius: 10px;
+          font-weight: 700; cursor: pointer; transition: 0.2s;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
         .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .search-input { width: 100%; padding: 12px 20px; border-radius: 50px; background: rgba(15,23,42,0.8); border: 1px solid var(--glass-border); color: white; font-size: 1rem; outline: none; transition: 0.3s; }
+
+        .search-input {
+          width: 100%; padding: 12px 20px; border-radius: 50px;
+          background: rgba(15,23,42,0.8); border: 1px solid var(--glass-border);
+          color: white; font-size: 1rem; outline: none; transition: 0.3s;
+        }
         .search-input:focus { border-color: var(--primary-glow); box-shadow: 0 0 15px rgba(6,182,212,0.1); }
-        
+
+        /* --- RESPONSIVE GRIDS --- */
         .carousel-track { display: flex; gap: 24px; padding: 10px 0; width: max-content; }
-        .offer-card { width: 240px; height: 160px; background: linear-gradient(160deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; transition: all 0.3s; }
+        
+        .offer-card {
+          width: 240px; height: 160px;
+          background: linear-gradient(160deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+          border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px;
+          display: flex; flex-direction: column; justify-content: space-between;
+          flex-shrink: 0; transition: all 0.3s;
+        }
         .offer-card:hover { border-color: var(--card-color); transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
-        .tech-chip { padding: 10px 24px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 99px; font-size: 0.95rem; font-weight: 500; color: #cbd5e1; white-space: nowrap; flex-shrink: 0; }
+
+        .tech-chip {
+          padding: 10px 24px; background: rgba(255,255,255,0.02);
+          border: 1px solid var(--glass-border); border-radius: 99px;
+          font-size: 0.95rem; font-weight: 500; color: #cbd5e1; white-space: nowrap; flex-shrink: 0;
+        }
+
+        /* --- SEARCH LAYOUT --- */
+        .subject-grid {
+          /* Responsive Grid: Fit as many 160px columns as possible */
+          display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px;
+        }
         
-        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-        .subject-card { aspect-ratio: 1; background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent); border: 1px solid var(--glass-border); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; }
-        .subject-card:hover { background: linear-gradient(135deg, rgba(6,182,212,0.1), transparent); border-color: var(--primary-glow); transform: translateY(-5px); }
+        .subject-card {
+          aspect-ratio: 1;
+          background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent);
+          border: 1px solid var(--glass-border); border-radius: 24px;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          cursor: pointer; transition: all 0.3s;
+        }
+        .subject-card:hover {
+          background: linear-gradient(135deg, rgba(6,182,212,0.1), transparent);
+          border-color: var(--primary-glow); transform: translateY(-5px);
+        }
         .subject-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; color: var(--text-main); }
-        
-        .split-view { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: 100%; }
+
+        .split-view {
+          display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: 100%;
+        }
         @media (max-width: 1024px) { .split-view { grid-template-columns: 1fr; } }
-        .video-seq-item { display: flex; gap: 15px; padding: 15px; background: rgba(255,255,255,0.02); border: 1px solid transparent; border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; align-items: center; }
+
+        .video-seq-item {
+          display: flex; gap: 15px; padding: 15px;
+          background: rgba(255,255,255,0.02); border: 1px solid transparent;
+          border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+          align-items: center;
+        }
         .video-seq-item:hover { background: rgba(255,255,255,0.05); border-color: var(--primary-glow); transform: translateX(5px); }
+
+        /* --- VIDEO PLAYER UI --- */
+        .video-page-wrapper {
+          display: flex; flex-direction: column; width: 100%; max-width: 1200px; margin: 0 auto;
+        }
         
-        .video-page-wrapper { display: flex; flex-direction: column; width: 100%; max-width: 1200px; margin: 0 auto; }
-        .player-frame { width: 100%; height: 60vh; background: black; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8); }
+        .player-frame {
+          width: 100%; height: 60vh; /* Fixed height for cinema feel */
+          background: black; border-radius: 20px; overflow: hidden;
+          box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8);
+        }
         @media (max-width: 768px) { .player-frame { height: 40vh; } }
-        .action-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 30px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); color: #e2e8f0; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
+
+        .video-meta-bar {
+          display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 15px;
+        }
+        
+        .action-btn {
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 16px; border-radius: 30px;
+          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05);
+          color: #e2e8f0; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: 0.2s;
+        }
         .action-btn:hover { background: rgba(6,182,212,0.15); border-color: var(--primary-glow); color: white; }
-        .tabs-container { margin-top: 40px; background: rgba(255,255,255,0.02); border-radius: 24px; padding: 30px; border: 1px solid var(--glass-border); min-height: 400px; }
-        @media (max-width: 600px) { .tabs-container { padding: 15px; } }
+
+        /* FIXED HEIGHT TABS CONTAINER */
+        .tabs-container {
+          margin-top: 40px; background: rgba(255,255,255,0.02);
+          border-radius: 24px; padding: 30px; border: 1px solid var(--glass-border);
+          min-height: 400px; /* Prevents jumping */
+        }
+        @media (max-width: 600px) {
+          .tabs-container { padding: 15px; }
+        }
+
       `}</style>
 
-      {/* SIDEBAR - Fixed Structure for Mobile/Desktop */}
+      {/* SIDEBAR */}
       <nav className="sidebar">
-        {/* Main Icons Group */}
-        <div className="nav-group">
+        {/* Main Icons */}
+        <div className="nav-group" style={{ marginBottom: 'auto' }}>
           <NavIcon icon={<Home size={24} />} id="home" active={activeTab} set={setActiveTab} tooltip={t(content.nav_home)} />
           <NavIcon icon={<Clapperboard size={24} />} id="search" active={activeTab} set={setActiveTab} tooltip={t(content.nav_hub)} />
           <NavIcon icon={<Download size={24} />} id="downloads" active={activeTab} set={setActiveTab} tooltip={t(content.nav_down)} />
           <NavIcon icon={<ListVideo size={24} />} id="saved" active={activeTab} set={setActiveTab} tooltip={t(content.nav_play)} />
         </div>
         
-        {/* Account Icon Group - Now visible on mobile! */}
-        <div className="nav-group">
+        {/* Footer Icons (Account) */}
+        <div className="nav-group nav-spacer-bottom" style={{ marginBottom: '2rem' }}>
            <NavIcon icon={<User size={24} />} id="account" active={activeTab} set={setActiveTab} tooltip={t(content.nav_acc)} />
         </div>
       </nav>
@@ -407,7 +496,6 @@ function LearningHub({ user, subjectsData }) {
 
   const subjectVideos = useMemo(() => {
     return videos.filter((v) => {
-      // FIX: Compare with ID (Database value) instead of Name (Display value)
       const matchSubject = selectedSubjectId && (v.subject || 'Misc').toLowerCase() === selectedSubjectId.toLowerCase();
       const matchSearch = viewState === 'list' && searchTerm ? (v.title || '').toLowerCase().includes(searchTerm.toLowerCase()) : true;
       return matchSubject && matchSearch;
@@ -773,8 +861,130 @@ function PlaylistPage() {
   )
 }
 
-function QuizPage() {
-  return null; // Removed
+function QuizPage({ user }) {
+  const { t } = useLanguage();
+  const content = {
+    active_quizzes: { en: "Active Quizzes", pa: "ਸਰਗਰਮ ਕਵਿਜ਼" },
+    no_quiz: { en: "No quizzes assigned.", pa: "ਕੋਈ ਕਵਿਜ਼ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕੀਤਾ ਗਿਆ।" },
+    start: { en: "Start Quiz", pa: "ਕਵਿਜ਼ ਸ਼ੁਰੂ ਕਰੋ" },
+    completed: { en: "Completed", pa: "ਪੂਰਾ ਹੋਇਆ" },
+    questions: { en: "Questions", pa: "ਸਵਾਲ" },
+    quiz_done: { en: "Quiz Completed!", pa: "ਕਵਿਜ਼ ਪੂਰਾ ਹੋਇਆ!" },
+    score_msg: { en: "You scored", pa: "ਤੁਹਾਡਾ ਸਕੋਰ" },
+    back: { en: "Back to Quizzes", pa: "ਕਵਿਜ਼ ਤੇ ਵਾਪਸ" }
+  };
+
+  const [quizzes, setQuizzes] = useState([]);
+  const [loadingQuizzes, setLoadingQuizzes] = useState(false);
+  const [quizError, setQuizError] = useState('');
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [step, setStep] = useState('list'); 
+  const [score, setScore] = useState(0);
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [submittedQuizIds, setSubmittedQuizIds] = useState(new Set());
+
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      try {
+        setLoadingQuizzes(true);
+        const res = await api.get('/quizzes');
+        setQuizzes(res.data || []);
+      } catch (err) { setQuizError('Failed to load quizzes.'); } finally { setLoadingQuizzes(false); }
+    };
+    fetchQuizzes();
+  }, []);
+
+  useEffect(() => {
+    const fetchAttempts = async () => {
+      if (!user?.email) return;
+      try {
+        const res = await api.get('/quizzes/attempts/by-student', { params: { email: user.email } });
+        const idSet = new Set((res.data || []).map(a => String(a.quiz)));
+        setSubmittedQuizIds(idSet);
+      } catch (err) { console.error(err); }
+    };
+    fetchAttempts();
+  }, [user]);
+
+  const startQuiz = (quiz) => {
+    if (submittedQuizIds.has(String(quiz._id))) return;
+    setSelectedQuiz(quiz); setQuestions(quiz.questions); setCurrentQuestionIndex(0); setUserAnswers({}); setScore(0); setStep('quiz');
+  };
+
+  const handleOptionSelect = (idx) => setUserAnswers(prev => ({ ...prev, [currentQuestionIndex]: idx }));
+  const handleNext = () => { if (currentQuestionIndex < questions.length - 1) setCurrentQuestionIndex(prev => prev + 1); else finishQuiz(); };
+  const finishQuiz = async () => {
+    let localScore = 0; questions.forEach((q, i) => { if (userAnswers[i] === q.correctIndex) localScore++; });
+    setScore(localScore);
+    try {
+      const answersArray = questions.map((_, i) => userAnswers[i] ?? -1);
+      await api.post(/quizzes/${selectedQuiz._id}/submit, { answers: answersArray, name: user?.name, email: user?.email, className: user?.className });
+      setSubmittedQuizIds(prev => new Set(prev).add(String(selectedQuiz._id)));
+    } catch(e) { console.error(e); }
+    setStep('result');
+  };
+
+  if (step === 'quiz' && selectedQuiz) {
+    const currentQ = questions[currentQuestionIndex];
+    return (
+      <div style={{ maxWidth: '800px', margin: '0 auto', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: '40px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', color: '#94a3b8' }}>
+            <span>Question {currentQuestionIndex + 1} / {questions.length}</span>
+            <span style={{ color: 'var(--primary-glow)', fontWeight: 600 }}>{selectedQuiz.title}</span>
+          </div>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '30px', lineHeight: '1.4' }}>{currentQ.questionText}</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '40px' }}>
+            {currentQ.options.map((opt, i) => (
+              <button key={i} onClick={() => handleOptionSelect(i)} style={{ padding: '18px 24px', borderRadius: '16px', textAlign: 'left', fontSize: '1rem', cursor: 'pointer', transition: '0.2s', background: userAnswers[currentQuestionIndex] === i ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.03)', border: userAnswers[currentQuestionIndex] === i ? '1px solid var(--primary-glow)' : '1px solid var(--glass-border)', color: userAnswers[currentQuestionIndex] === i ? 'white' : '#cbd5e1' }}>{opt}</button>
+            ))}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <button disabled={currentQuestionIndex === 0} onClick={() => setCurrentQuestionIndex(p => p - 1)} style={{ background: 'transparent', border: '1px solid #475569', padding: '10px 24px', borderRadius: '12px', color: '#94a3b8', cursor: currentQuestionIndex===0?'default':'pointer', opacity: currentQuestionIndex===0?0.5:1 }}>Previous</button>
+            <button onClick={handleNext} className="btn-primary" style={{ padding: '10px 30px' }}>{currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next'}</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (step === 'result') {
+    return (
+      <div style={{ maxWidth: '600px', margin: '0 auto', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ textAlign: 'center', padding: '50px', width: '100%' }}>
+          <Award size={80} color="var(--primary-glow)" style={{ margin: '0 auto 20px' }} />
+          <h2 style={{ fontSize: '2.5rem', marginBottom: '10px' }} className="gradient-text">{t(content.quiz_done)}</h2>
+          <p style={{ fontSize: '1.2rem', color: '#cbd5e1', marginBottom: '30px' }}>{t(content.score_msg)} {score} out of {questions.length}</p>
+          <button className="btn-primary" onClick={() => { setSelectedQuiz(null); setStep('list'); }}>{t(content.back)}</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 800, marginBottom: '30px' }} className="gradient-text">{t(content.active_quizzes)}</h1>
+      {loadingQuizzes && <div style={{textAlign:'center', marginTop:'50px'}}><Loader2 className="animate-spin" size={40} color="var(--primary-glow)" /></div>}
+      {!loadingQuizzes && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '25px' }}>
+          {quizzes.length === 0 ? <p style={{color:'#94a3b8'}}>{t(content.no_quiz)}</p> : quizzes.map(q => {
+             const isSubmitted = submittedQuizIds.has(String(q._id));
+             return (
+              <div key={q._id} className="glass-panel" style={{ borderLeft: '4px solid var(--accent-glow)', opacity: isSubmitted ? 0.7 : 1 }}>
+                <h3 style={{ fontSize: '1.4rem', marginBottom: '5px' }}>{q.title}</h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '20px' }}>{q.subject || 'General'} • {q.questions?.length || 0} {t(content.questions)}</p>
+                <button onClick={() => startQuiz(q)} disabled={isSubmitted} className="btn-primary" style={{ width: '100%', background: isSubmitted ? '#334155' : undefined, boxShadow: isSubmitted ? 'none' : undefined }}>
+                  {isSubmitted ? t(content.completed) : t(content.start)}
+                </button>
+              </div>
+             )
+          })}
+        </div>
+      )}
+    </div>
+  )
 }
 
 /* === WIDGETS === */
