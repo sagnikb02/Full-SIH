@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
 import { 
-  Home, Upload, FilePlus, Users, BarChart, FileText, 
+  Home, Upload, FilePlus, Users, BarChart, 
   User, LogOut, KeyRound, ChevronDown, Trash2, CheckCircle, 
   X, Search, TrendingUp, Activity, Calendar, Globe, AlertCircle, Video, Film, CheckSquare, Bell
 } from 'lucide-react';
@@ -36,12 +36,12 @@ export default function TeacherDashboard() {
 
   // 3. TRANSLATIONS
   const content = {
-    // Sidebar (Removed Quiz Tab)
+    // Sidebar
     nav_home: { en: "Home", pa: "ਘਰ" },
     nav_upload: { en: "Upload", pa: "ਅਪਲੋਡ" },
     nav_students: { en: "Students", pa: "ਵਿਦਿਆਰਥੀ" },
     nav_analytics: { en: "Analytics", pa: "ਅੰਕੜੇ" },
-    nav_news: { en: "News", pa: "ਖ਼ਬਰਾਂ" },
+    nav_updates: { en: "Updates", pa: "ਅੱਪਡੇਟ" },
     nav_exams: { en: "Exams", pa: "ਪ੍ਰੀਖਿਆਵਾਂ" },
     nav_assign: { en: "Assignments", pa: "ਅਸਾਈਨਮੈਂਟ" },
     nav_account: { en: "Account", pa: "ਖਾਤਾ" },
@@ -49,8 +49,9 @@ export default function TeacherDashboard() {
     // Home
     cmd_center: { en: "Command Center", pa: "ਕਮਾਂਡ ਸੈਂਟਰ" },
     welcome: { en: "Welcome", pa: "ਜੀ ਆਇਆਂ ਨੂੰ" },
-    act_env: { en: "Active Environment: Class", pa: "ਸਰਗਰਮ ਮਾਹੌਲ: ਜਮਾਤ" },
-    sel_cls_warn: { en: "Select a class in Account settings.", pa: "ਖਾਤਾ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਜਮਾਤ ਚੁਣੋ।" },
+    active_env: { en: "Active Environment: Class", pa: "ਸਰਗਰਮ ਮਾਹੌਲ: ਜਮਾਤ" },
+    sel_cls_lbl: { en: "Select Active Class:", pa: "ਸਰਗਰਮ ਜਮਾਤ ਚੁਣੋ:" },
+    sel_env_ph: { en: "Select Class", pa: "ਜਮਾਤ ਚੁਣੋ" },
     live_ana: { en: "Live Analytics", pa: "ਲਾਈਵ ਅੰਕੜੇ" },
     
     // Stats
@@ -65,7 +66,7 @@ export default function TeacherDashboard() {
     act_tsk: { en: "New Assignment", pa: "ਨਵੀਂ ਅਸਾਈਨਮੈਂਟ" },
     desc_tsk: { en: "Homework portal", pa: "ਹੋਮਵਰਕ ਪੋਰਟਲ" },
     act_pst: { en: "Post Update", pa: "ਅੱਪਡੇਟ ਪੋਸਟ ਕਰੋ" },
-    desc_pst: { en: "Class alert", pa: "ਜਮਾਤ ਚੇਤਾਵਨੀ" },
+    desc_pst: { en: "Class announcements", pa: "ਜਮਾਤ ਐਲਾਨ" },
 
     // Notifications
     latest_dbt: { en: "Latest Doubts", pa: "ਨਵੀਨਤਮ ਸ਼ੱਕ" },
@@ -135,7 +136,7 @@ export default function TeacherDashboard() {
   };
 
   const handleToggleNotifications = () => {
-    if (!activeClass) { alert(t(content.sel_cls_warn)); return; }
+    if (!activeClass) { alert("Please select a class first."); return; }
     setShowNotifications((prev) => {
       if (!prev) fetchNotifications();
       if (prev) { setReplyTarget(null); setReplyText(''); }
@@ -147,7 +148,7 @@ export default function TeacherDashboard() {
     if (!replyTarget || !replyText.trim()) return;
     try {
       setPostingReply(true);
-      await api.post(`/videos/${replyTarget.videoId}/comments`, {
+      await api.post(/videos/${replyTarget.videoId}/comments, {
         text: replyText.trim(), authorName: teacherUser?.name || 'Teacher', authorEmail: teacherUser?.email, role: 'teacher',
       });
       setReplyText(''); setReplyTarget(null); fetchNotifications();
@@ -159,31 +160,29 @@ export default function TeacherDashboard() {
       <style>{`
         :root { --bg-deep: #020617; --glass-surface: rgba(30, 41, 59, 0.6); --glass-border: rgba(255, 255, 255, 0.08); --primary-glow: #06b6d4; --accent-glow: #8b5cf6; --text-main: #f1f5f9; --text-muted: #94a3b8; }
         .dashboard-wrapper { height: 100vh; width: 100vw; background-color: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; display: flex; overflow: hidden; background-image: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08), transparent 40%), radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%); }
-        .sidebar { width: 90px; height: 100vh; background: rgba(15, 23, 42, 0.8); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; align-items: center; padding-top: 2rem; gap: 1.2rem; backdrop-filter: blur(20px); z-index: 50; transition: all 0.3s ease; }
-        @media (max-width: 768px) { .dashboard-wrapper { flex-direction: column-reverse; } .sidebar { width: 100vw; height: 70px; flex-direction: row; justify-content: space-around; padding: 0; border-right: none; border-top: 1px solid var(--glass-border); position: fixed; bottom: 0; left: 0; background: #020617; } .nav-spacer { display: none; } }
+        
+        /* SIDEBAR (Identical to Student Dashboard for consistency) */
+        .sidebar { width: 90px; height: 100vh; background: rgba(15, 23, 42, 0.9); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 2rem 0; backdrop-filter: blur(20px); z-index: 100; transition: all 0.3s ease; }
+        .nav-group { display: flex; flex-direction: column; gap: 1.2rem; width: 100%; align-items: center; }
+
+        @media (max-width: 768px) { 
+          .dashboard-wrapper { flex-direction: column-reverse; } 
+          .sidebar { width: 100vw; height: 75px; flex-direction: row; justify-content: space-evenly; align-items: center; padding: 0 10px; border-right: none; border-top: 1px solid var(--glass-border); position: fixed; bottom: 0; left: 0; background: rgba(2, 6, 23, 0.98); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
+          .nav-group { flex-direction: row; justify-content: space-evenly; gap: 0; width: 100%; }
+        }
+        
         .nav-icon-box { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; position: relative; }
         .nav-icon-box:hover { background: rgba(255,255,255,0.05); color: white; transform: scale(1.1); }
         .nav-icon-box.active { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05)); color: var(--accent-glow); border: 1px solid rgba(139, 92, 246, 0.4); box-shadow: 0 0 15px rgba(139, 92, 246, 0.25); }
-        .main-content { flex: 1; height: 100vh; overflow-y: auto; padding: 2rem 3rem; position: relative; padding-bottom: 100px; }
+
+        .main-content { flex: 1; height: 100vh; overflow-y: auto; padding: 2rem 3rem; position: relative; padding-bottom: 120px; }
         .main-content::-webkit-scrollbar { width: 6px; } .main-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        @media (max-width: 768px) { .main-content { padding: 1.5rem; height: calc(100vh - 70px); } }
+        @media (max-width: 768px) { .main-content { padding: 1.5rem; height: calc(100vh - 70px); padding-bottom: 100px; } }
         
-        /* 🔥 ORANGE GRADIENT TITLE ANIMATION 🔥 */
-        .title-orange {
-          font-weight: 800;
-          background: linear-gradient(to right, #ffedd5, #fb923c, #f97316, #ea580c, #ffedd5);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shine 5s linear infinite;
-          
-          /* PUNJABI FONT FIX */
-          line-height: 1.6;
-          padding-top: 5px;
-          padding-bottom: 5px;
-          display: inline-block;
-        }
+        /* 🔥 ORANGE GRADIENT TITLE ANIMATION & FONT FIX 🔥 */
+        .title-orange { font-weight: 800; background: linear-gradient(to right, #ffedd5, #fb923c, #f97316, #ea580c, #ffedd5); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 5s linear infinite; line-height: 1.6; padding-top: 5px; padding-bottom: 5px; display: inline-block; }
         @keyframes shine { to { background-position: 200% center; } }
+        .gradient-text { background: linear-gradient(90deg, #ffffff 0%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; line-height: 1.6; padding-top: 5px; padding-bottom: 5px; display: inline-block; }
 
         .section-header { font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
         .section-header::after { content: ''; height: 1px; flex: 1; background: linear-gradient(90deg, var(--glass-border), transparent); }
@@ -198,18 +197,17 @@ export default function TeacherDashboard() {
 
       {/* SIDEBAR */}
       <nav className="sidebar">
-        <div style={{ marginBottom: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', marginTop:'1rem' }}>
-          <NavIcon icon={<Home size={22} />} id="home" active={activeTab} set={setActiveTab} tooltip={t(content.nav_home)} />
-          <NavIcon icon={<Upload size={22} />} id="upload" active={activeTab} set={setActiveTab} tooltip={t(content.nav_upload)} />
-          <NavIcon icon={<Users size={22} />} id="students" active={activeTab} set={setActiveTab} tooltip={t(content.nav_students)} />
-          <NavIcon icon={<BarChart size={22} />} id="analytics" active={activeTab} set={setActiveTab} tooltip={t(content.nav_analytics)} />
-          <NavIcon icon={<Globe size={22} />} id="news" active={activeTab} set={setActiveTab} tooltip={t(content.nav_news)} />
-          {/* REMOVED STANDALONE QUIZ TAB */}
-          <NavIcon icon={<AlertCircle size={22} />} id="exams" active={activeTab} set={setActiveTab} tooltip={t(content.nav_exams)} />
-          <NavIcon icon={<FilePlus size={22} />} id="assignments" active={activeTab} set={setActiveTab} tooltip={t(content.nav_assign)} />
+        <div className="nav-group">
+          <NavIcon icon={<Home size={24} />} id="home" active={activeTab} set={setActiveTab} tooltip={t(content.nav_home)} />
+          <NavIcon icon={<Upload size={24} />} id="upload" active={activeTab} set={setActiveTab} tooltip={t(content.nav_upload)} />
+          <NavIcon icon={<Users size={24} />} id="students" active={activeTab} set={setActiveTab} tooltip={t(content.nav_students)} />
+          <NavIcon icon={<BarChart size={24} />} id="analytics" active={activeTab} set={setActiveTab} tooltip={t(content.nav_analytics)} />
+          <NavIcon icon={<Globe size={24} />} id="updates" active={activeTab} set={setActiveTab} tooltip={t(content.nav_updates)} />
+          <NavIcon icon={<AlertCircle size={24} />} id="exams" active={activeTab} set={setActiveTab} tooltip={t(content.nav_exams)} />
+          <NavIcon icon={<FilePlus size={24} />} id="assignments" active={activeTab} set={setActiveTab} tooltip={t(content.nav_assign)} />
         </div>
-        <div style={{ marginBottom: '2rem' }}>
-           <NavIcon icon={<User size={22} />} id="account" active={activeTab} set={setActiveTab} tooltip={t(content.nav_account)} />
+        <div className="nav-group">
+           <NavIcon icon={<User size={24} />} id="account" active={activeTab} set={setActiveTab} tooltip={t(content.nav_account)} />
         </div>
       </nav>
 
@@ -245,13 +243,8 @@ export default function TeacherDashboard() {
             {replyTarget && (
               <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(30,64,175,0.6)' }}>
                 <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: 6 }}>{t(content.replying)} {replyTarget.authorName}</div>
-                <textarea
-                value={updateText}
-                onChange={(e) => setUpdateText(e.target.value)}
-                placeholder="Type update..."
-                className="your-textarea-class"
-              />
-<div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                <textarea value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder={t(content.type_rep)} style={{ width: '100%', minHeight: 60, background: 'rgba(15,23,42,0.9)', borderRadius: 10, border: '1px solid rgba(148,163,184,0.4)', color: '#e5e7eb', padding: 8, marginBottom: 6 }} />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                   <button onClick={() => { setReplyTarget(null); setReplyText(''); }} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.8rem', cursor: 'pointer' }}>{t(content.cancel)}</button>
                   <button onClick={handleReplySend} disabled={postingReply || !replyText.trim()} className="btn-primary" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>{postingReply ? t(content.sending) : t(content.send_rep)}</button>
                 </div>
@@ -265,23 +258,42 @@ export default function TeacherDashboard() {
           {activeTab === 'home' && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div style={{ marginBottom: '3rem', marginTop: '1rem' }}>
-                {/* 🌈 ORANGE GRADIENT TITLE */}
                 <h1 style={{ fontSize: '3rem', margin: 0 }} className="title-orange">{t(content.cmd_center)}</h1>
                 <p style={{ fontSize: '1.5rem', color: 'white', marginTop: '10px', fontWeight: 600 }}>{t(content.welcome)}, {getDisplayName()}</p>
-                <p style={{ fontSize: '1rem', color: '#64748b', marginTop: '5px' }}>{activeClass ? `${t(content.act_env)} ${activeClass}` : t(content.sel_cls_warn)}</p>
+                
+                {/* 🔽 CLASS SELECTOR MOVED HERE FROM ACCOUNT 🔽 */}
+                <div style={{ marginTop: '20px', maxWidth: '300px' }}>
+                  <label style={{ color: '#94a3b8', fontSize: '0.85rem', display: 'block', marginBottom: '8px' }}>
+                    {t(content.sel_cls_lbl)}
+                  </label>
+                  <select 
+                    className="input-field" 
+                    value={activeClass} 
+                    onChange={(e) => {
+                      setActiveClass(e.target.value);
+                      localStorage.setItem('teacherActiveClass', e.target.value);
+                    }}
+                  >
+                    <option value="">{t(content.sel_env_ph)}</option>
+                    {[...Array(10)].map((_, i) => (
+                      <option key={i} value={i+1}>{t({en:"Class", pa:"ਜਮਾਤ"})} {i+1}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
+
               <div className="section-header">{t(content.live_ana)}</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '25px' }}>
                 <StatCard label={t(content.tot_stu)} value={homeStats.totalStudents ?? '--'} icon={<Users size={28} color="#fb923c" />} bg="rgba(251, 146, 60, 0.1)" color="white" />
-                <StatCard label={t(content.avg_att)} value={homeStats.avgAttendance ? `${homeStats.avgAttendance}%` : '--'} icon={<CheckCircle size={28} color="#4ade80" />} bg="rgba(74, 222, 128, 0.1)" color="#4ade80" />
-                <StatCard label={t(content.avg_grow)} value={homeStats.avgScore ? `+${homeStats.avgScore}%` : '--'} icon={<TrendingUp size={28} color="#8b5cf6" />} bg="rgba(139, 92, 246, 0.1)" color="#8b5cf6" />
+                <StatCard label={t(content.avg_att)} value={homeStats.avgAttendance ? ${homeStats.avgAttendance}% : '--'} icon={<CheckCircle size={28} color="#4ade80" />} bg="rgba(74, 222, 128, 0.1)" color="#4ade80" />
+                <StatCard label={t(content.avg_grow)} value={homeStats.avgScore ? +${homeStats.avgScore}% : '--'} icon={<TrendingUp size={28} color="#8b5cf6" />} bg="rgba(139, 92, 246, 0.1)" color="#8b5cf6" />
               </div>
+
               <div className="section-header" style={{ marginTop: '40px' }}>{t(content.q_start)}</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                   <QuickCard icon={<Upload size={24} color="#a78bfa" />} bg="rgba(139, 92, 246, 0.1)" title={t(content.act_up)} desc={t(content.desc_up)} onClick={() => setActiveTab('upload')} />
-                  {/* REMOVED CREATE QUIZ CARD (It's in upload now) */}
                   <QuickCard icon={<FilePlus size={24} color="#f472b6" />} bg="rgba(236, 72, 153, 0.1)" title={t(content.act_tsk)} desc={t(content.desc_tsk)} onClick={() => setActiveTab('assignments')} />
-                  <QuickCard icon={<Globe size={24} color="#fb923c" />} bg="rgba(251, 146, 60, 0.1)" title={t(content.act_pst)} desc={t(content.desc_pst)} onClick={() => setActiveTab('news')} />
+                  <QuickCard icon={<Globe size={24} color="#fb923c" />} bg="rgba(251, 146, 60, 0.1)" title={t(content.act_pst)} desc={t(content.desc_pst)} onClick={() => setActiveTab('updates')} />
               </div>
             </motion.div>
           )}
@@ -289,21 +301,10 @@ export default function TeacherDashboard() {
           {activeTab === 'upload' && <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><UploadModule /></motion.div>}
           {activeTab === 'students' && <motion.div key="students" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><StudentTracker activeClass={activeClass} /></motion.div>}
           {activeTab === 'analytics' && <motion.div key="analytics" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><AnalyticsModule /></motion.div>}
-
-          {activeTab === 'news' && (
-          <motion.div
-            key="news"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <NewsManager activeClass={activeClass} teacherUser={teacherUser} />
-          </motion.div>
-        )}
-        
+          {activeTab === 'updates' && <motion.div key="updates" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><BroadcastManager activeClass={activeClass} user={teacherUser} /></motion.div>}
           {activeTab === 'exams' && <motion.div key="exams" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><ExamManager /></motion.div>}
           {activeTab === 'assignments' && <motion.div key="assignments" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><AssignmentManager activeClass={activeClass} /></motion.div>}
-          {activeTab === 'account' && <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><AccountSection user={teacherUser} activeClass={activeClass} setActiveClass={setActiveClass} handleLogout={handleLogout} /></motion.div>}
+          {activeTab === 'account' && <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><AccountSection user={teacherUser} activeClass={activeClass} handleLogout={handleLogout} /></motion.div>}
         </AnimatePresence>
       </main>
     </div>
@@ -314,7 +315,7 @@ export default function TeacherDashboard() {
 function NavIcon({ icon, id, active, set, tooltip }) {
   const isActive = active === id;
   return (
-    <div className={`nav-icon-box ${isActive ? 'active' : ''}`} onClick={() => set(id)} title={tooltip}>
+    <div className={nav-icon-box ${isActive ? 'active' : ''}} onClick={() => set(id)} title={tooltip}>
       {icon}
       {isActive && <motion.div layoutId="glow" style={{ position: 'absolute', inset: 0, borderRadius: '12px', boxShadow: '0 0 15px var(--accent-glow)', opacity: 0.3 }} />}
     </div>
@@ -377,8 +378,6 @@ function UploadModule() {
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [savingQuiz, setSavingQuiz] = useState(false);
   const [attachedQuizId, setAttachedQuizId] = useState(null);
-  const [updateText, setUpdateText] = useState('');
-
 
   useEffect(() => { api.get('/videos').then(res => setVideos(res.data || [])).catch(console.error); }, []);
 
@@ -415,7 +414,6 @@ function UploadModule() {
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-      {/* 🌈 ORANGE TITLE */}
       <h2 style={{ fontSize: '2rem', marginBottom: '30px' }} className="title-orange">{t(content.title)}</h2>
       <div className="glass-panel" style={{ marginBottom: '30px' }}>
          <div style={{display:'flex', gap:20, marginBottom:20}}>
@@ -457,11 +455,11 @@ function UploadModule() {
                      <input className="input-field" placeholder={t(content.quiz_ti)} value={quizTitle} onChange={e => setQuizTitle(e.target.value)} style={{ marginBottom: 10 }} />
                      <div style={{ background: 'rgba(15,23,42,0.9)', padding: 12, borderRadius: 10, border: '1px solid rgba(51,65,85,0.9)', marginBottom: 10 }}>
                         <input className="input-field" placeholder={t(content.q_txt)} value={qText} onChange={e => setQText(e.target.value)} style={{ marginBottom: 8 }} />
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 8 }}>
                            {qOptions.map((opt, i) => (
                               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                  <input type="radio" checked={correctIdx===i} onChange={() => setCorrectIdx(i)} />
-                                 <input className="input-field" placeholder={`${t(content.opt)} ${i+1}`} value={opt} onChange={e => { const n = [...qOptions]; n[i] = e.target.value; setQOptions(n); }} />
+                                 <input className="input-field" placeholder={${t(content.opt)} ${i+1}} value={opt} onChange={e => { const n = [...qOptions]; n[i] = e.target.value; setQOptions(n); }} />
                               </div>
                            ))}
                         </div>
@@ -479,7 +477,7 @@ function UploadModule() {
          {videos.map(v => (
             <div key={v._id} className="glass-panel" style={{ padding: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                <div><h4 style={{ fontWeight: 600 }}>{v.title}</h4><p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{v.subject} • Class {v.className}</p></div>
-               <Trash2 size={18} color="#ef4444" style={{ cursor: 'pointer' }} onClick={async () => { if(window.confirm('Delete?')) { await api.delete(`/videos/${v._id}`); setVideos(p => p.filter(x => x._id !== v._id)); }}} />
+               <Trash2 size={18} color="#ef4444" style={{ cursor: 'pointer' }} onClick={async () => { if(window.confirm('Delete?')) { await api.delete(/videos/${v._id}); setVideos(p => p.filter(x => x._id !== v._id)); }}} />
             </div>
          ))}
       </div>
@@ -510,9 +508,8 @@ function StudentTracker({ activeClass }) {
 
   return (
      <div style={{ maxWidth: 900, margin: '0 auto' }}>
-        {/* 🌈 ORANGE TITLE */}
         <h2 style={{ fontSize: '2rem', marginBottom: 20 }} className="title-orange">{t(content.prog)}</h2>
-        <p style={{ color: '#94a3b8', marginBottom: 30 }}>{activeClass ? `${t(content.trk_for)} ${activeClass}` : t(content.sel_ac)}</p>
+        <p style={{ color: '#94a3b8', marginBottom: 30 }}>{activeClass ? ${t(content.trk_for)} ${activeClass} : t(content.sel_ac)}</p>
         <div className="glass-panel">
            {loading && <p style={{textAlign:'center'}}>Loading...</p>}
            {!loading && (
@@ -543,201 +540,67 @@ function StudentTracker({ activeClass }) {
 
 function AnalyticsModule() { 
    const { t } = useLanguage();
-   // 🌈 ORANGE TITLE
    return <div style={{maxWidth:900, margin:'0 auto'}}><h2 className="title-orange" style={{fontSize:'2rem', marginBottom:30}}>{t({en:"Class Analytics", pa:"ਜਮਾਤ ਵਿਸ਼ਲੇਸ਼ਣ"})}</h2><div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:30}}><div className="glass-panel" style={{height:300, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column'}}><BarChart size={48} color="#8b5cf6" style={{marginBottom:10}}/><h3>Pass/Fail</h3><p style={{color:'#94a3b8'}}>Graph Placeholder</p></div><div className="glass-panel" style={{height:300, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column'}}><TrendingUp size={48} color="#06b6d4" style={{marginBottom:10}}/><h3>Trend</h3><p style={{color:'#94a3b8'}}>Graph Placeholder</p></div></div></div> 
 }
 
-function NewsManager({ activeClass, teacherUser }) {
+/* === 5. BROADCAST MANAGER === */
+function BroadcastManager({ activeClass, user }) {
   const { t } = useLanguage();
-
-  const content = {
-    title: { en: "Class Updates", pa: "ਕਲਾਸ ਅੱਪਡੇਟ" },
-    env_label: { en: "Environment", pa: "ਮਾਹੌਲ" },
-    no_class: { en: "No class selected", pa: "ਕੋਈ ਜਮਾਤ ਨਹੀਂ ਚੁਣੀ ਗਈ" },
-    recent: { en: "Recent Updates", pa: "ਤਾਜ਼ਾ ਅੱਪਡੇਟ" },
-    no_updates: {
-      en: "No updates have been posted for this class yet.",
-      pa: "ਇਸ ਜਮਾਤ ਲਈ ਅਜੇ ਕੋਈ ਅੱਪਡੇਟ ਨਹੀਂ ਪੋਸਟ ਕੀਤੀ ਗਈ।"
-    },
-    posting: { en: "Broadcasting…", pa: "ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ…" },
-    button: { en: "Broadcast Update", pa: "ਅੱਪਡੇਟ ਭੇਜੋ" },
-    loading: { en: "Loading…", pa: "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ..." },
-    fail_load: {
-      en: "Failed to load updates.",
-      pa: "ਅੱਪਡੇਟ ਲੋਡ ਨਹੀਂ ਹੋਏ।"
-    },
-    sel_class_alert: {
-      en: "Select an Active Classroom in Account settings first.",
-      pa: "ਪਹਿਲਾਂ ਖਾਤਾ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਸਰਗਰਮ ਜਮਾਤ ਚੁਣੋ।"
-    },
-    fail_post: {
-      en: "Failed to post update.",
-      pa: "ਅੱਪਡੇਟ ਪੋਸਟ ਨਹੀਂ ਹੋ ਸਕੀ।"
-    }
-  };
-
-  const [message, setMessage] = useState('');
-  const [posting, setPosting] = useState(false);
-  const [updates, setUpdates] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const loadUpdates = async () => {
-    if (!activeClass) {
-      setUpdates([]);
-      return;
-    }
-    try {
-      setLoading(true);
-      setError('');
-      const res = await api.get('/class-updates', {
-        params: { className: activeClass, limit: 5 },
-      });
-      setUpdates(res.data || []);
-    } catch (e) {
-      console.error(e);
-      setError(t(content.fail_load));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadUpdates();
-  }, [activeClass]);
+  const [updateText, setUpdateText] = useState('');
+  const [isPosting, setIsPosting] = useState(false);
 
   const handlePost = async () => {
-    if (!activeClass) {
-      alert(t(content.sel_class_alert));
-      return;
-    }
+    if (!activeClass) return alert(t({en: "Please select an active class first.", pa: "ਕਿਰਪਾ ਕਰਕੇ ਪਹਿਲਾਂ ਇੱਕ ਸਰਗਰਮ ਜਮਾਤ ਚੁਣੋ।"}));
+    if (!updateText.trim()) return;
 
-    const trimmed = message.trim();
-    if (!trimmed) return;
-
+    setIsPosting(true);
     try {
-      setPosting(true);
-
       await api.post('/class-updates', {
-        className: activeClass,   // e.g. "8"
-        message: trimmed,         // text from textarea
-        // if your backend uses auth middleware, it can pick teacherName/email from req.user
+        className: activeClass,
+        text: updateText,
+        authorName: user?.name || 'Teacher'
       });
-
-      setMessage('');       // clear textarea
-      await loadUpdates();  // refresh recent updates list
-    } catch (e) {
-      console.error(e);
-      alert(t(content.fail_post));
+      alert(t({en: "Update Posted Successfully!", pa: "ਅੱਪਡੇਟ ਸਫਲਤਾਪੂਰਵਕ ਪੋਸਟ ਕੀਤਾ ਗਿਆ!"}));
+      setUpdateText('');
+    } catch (err) {
+      console.error(err);
+      alert(t({en: "Failed to post update.", pa: "ਅੱਪਡੇਟ ਪੋਸਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ।"}));
     } finally {
-      setPosting(false);
+      setIsPosting(false);
     }
   };
 
-
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto' }}>
-      {/* 🌈 ORANGE TITLE */}
-      <h2
-        className="title-orange"
-        style={{ fontSize: '2rem', marginBottom: 30 }}
-      >
-        {t(content.title)}
+    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <h2 className="title-orange" style={{ fontSize: '2rem', marginBottom: '30px' }}>
+        {t({ en: "Class Updates", pa: "ਜਮਾਤ ਅੱਪਡੇਟ" })}
       </h2>
-
-      <div className="glass-panel" style={{ marginBottom: 30 }}>
-        <div
-          style={{
-            fontSize: '0.85rem',
-            color: '#94a3b8',
-            marginBottom: 10,
-          }}
-        >
-          {t(content.env_label)}:{' '}
-          {activeClass ? `${t({ en: "Class", pa: "ਜਮਾਤ" })} ${activeClass}` : t(content.no_class)}
-        </div>
-
-        <textarea
-          className="input-field"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          // no placeholder – lets teachers type anything / any language
-        />
-
-        <button
-          className="btn-primary"
-          style={{ marginTop: 20, width: '100%' }}
+      <div className="glass-panel">
+        <textarea 
+          className="input-field" 
+          placeholder={t({ en: "Share an announcement (e.g., Exam in 2 days)...", pa: "ਕੋਈ ਐਲਾਨ ਸਾਂਝਾ ਕਰੋ (ਜਿਵੇਂ ਕਿ: 2 ਦਿਨਾਂ ਵਿੱਚ ਪ੍ਰੀਖਿਆ)..." })} 
+          value={updateText} 
+          onChange={e => setUpdateText(e.target.value)}
+          rows={4}
+        ></textarea>
+        <button 
+          className="btn-primary" 
+          style={{ marginTop: '20px', width: '100%' }} 
           onClick={handlePost}
-          disabled={posting || !message.trim()}
+          disabled={isPosting}
         >
-          {posting ? t(content.posting) : t(content.button)}
+          {isPosting ? t({en: "Posting...", pa: "ਪੋਸਟ ਹੋ ਰਿਹਾ ਹੈ..."}) : t({ en: "Post Update", pa: "ਅੱਪਡੇਟ ਪੋਸਟ ਕਰੋ" })}
         </button>
       </div>
-
-      <div className="section-header">{t(content.recent)}</div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {loading && (
-          <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
-            {t(content.loading)}
-          </p>
-        )}
-        {error && (
-          <p style={{ color: '#f97373', fontSize: '0.9rem' }}>{error}</p>
-        )}
-        {!loading && !error && updates.length === 0 && (
-          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
-            {t(content.no_updates)}
-          </p>
-        )}
-
-        {!loading &&
-          !error &&
-          updates.map((u) => (
-            <div
-              key={u._id}
-              className="glass-panel"
-              style={{
-                padding: '14px 18px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-                borderLeft: '3px solid var(--accent-glow)',
-              }}
-            >
-              <div
-                style={{
-                  color: '#e5e7eb',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                }}
-              >
-                {u.message}
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  fontSize: '0.8rem',
-                  color: '#94a3b8',
-                }}
-              >
-                <span>{u.teacherName || 'Teacher'}</span>
-                <span>
-                  {u.createdAt
-                    ? new Date(u.createdAt).toLocaleString()
-                    : ''}
-                </span>
-              </div>
-            </div>
-          ))}
+      <div style={{ marginTop: '20px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
+        {t({en: Posting to Class ${activeClass}, pa: ਜਮਾਤ ${activeClass} ਲਈ ਪੋਸਟ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ})}
       </div>
     </div>
-  );
+  )
 }
 
 function ExamManager() {
    const { t } = useLanguage();
-   // 🌈 ORANGE TITLE
    return <div style={{maxWidth:800, margin:'0 auto'}}><h2 className="title-orange" style={{fontSize:'2rem', marginBottom:30}}>{t({en:"Exam Control", pa:"ਪ੍ਰੀਖਿਆ ਕੰਟਰੋਲ"})}</h2><div className="glass-panel" style={{textAlign:'center', padding:40}}><AlertCircle size={48} color="#ef4444" style={{marginBottom:20}}/><h3>{t({en:"No Live Exams", pa:"ਕੋਈ ਲਾਈਵ ਪ੍ਰੀਖਿਆ ਨਹੀਂ"})}</h3></div></div>
 }
 
@@ -763,14 +626,13 @@ function AssignmentManager({ activeClass }) {
       fd.append('title', title); fd.append('description', desc); fd.append('className', activeClass); fd.append('file', file);
       try { await api.post('/assignments', fd); alert("Created"); setTitle(''); setDesc(''); setFile(null); } catch(e){ alert("Error"); }
    };
-   
-   // 🌈 ORANGE TITLE
+
    return <div style={{maxWidth:800, margin:'0 auto'}}><h2 className="title-orange" style={{fontSize:'2rem', marginBottom:30}}>{t(content.title)}</h2><div className="glass-panel" style={{marginBottom:30}}><form onSubmit={handleCreate} style={{display:'flex', flexDirection:'column', gap:15}}><input className="input-field" placeholder={t(content.ph_title)} value={title} onChange={e=>setTitle(e.target.value)} /><textarea className="input-field" placeholder={t(content.ph_desc)} value={desc} onChange={e=>setDesc(e.target.value)} /><input type="file" onChange={e=>setFile(e.target.files[0])} style={{color:'#cbd5e1'}} /><button className="btn-primary">{t(content.btn)}</button></form></div><div className="section-header">{t(content.active)}</div><div style={{display:'flex', flexDirection:'column', gap:10}}>{ass.map(a=><div key={a._id} className="glass-panel" style={{padding:15}}>{a.title}</div>)}</div></div>
 }
 
-function AccountSection({ user, activeClass, setActiveClass, handleLogout }) {
+function AccountSection({ user, activeClass, handleLogout }) {
    const { t } = useLanguage();
    const [code, setCode] = useState('');
    const fetchCode = async () => { if(!activeClass) return alert("Select class"); const res = await api.get('/auth/referral-code', {params:{className:activeClass}}); setCode(res.data.referralCode); };
-   return <div className="glass-panel" style={{width:'100%', maxWidth:500, padding:50, textAlign:'center', background:'rgba(15,23,42,0.8)'}}><div style={{width:100, height:100, borderRadius:'50%', background:'linear-gradient(135deg, var(--accent-glow), #ec4899)', margin:'0 auto 20px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'3rem', fontWeight:800, color:'#0f172a'}}>{user?.name?.charAt(0)||'T'}</div><h2 style={{fontSize:'1.8rem', fontWeight:700}}>{user?.name}</h2><p style={{color:'#94a3b8', fontSize:'1rem', marginBottom:30}}>{user?.email} • {t({en:"Faculty", pa:"ਫੈਕਲਟੀ"})}</p><div style={{textAlign:'left', marginBottom:30}}><label style={{color:'#94a3b8', fontSize:'0.85rem', display:'block', marginBottom:8}}>{t({en:"Active Classroom", pa:"ਸਰਗਰਮ ਕਲਾਸਰੂਮ"})}</label><select className="input-field" value={activeClass} onChange={e=>{setActiveClass(e.target.value); localStorage.setItem('teacherActiveClass', e.target.value); setCode('');}}><option value="">{t({en:"Select Environment", pa:"ਮਾਹੌਲ ਚੁਣੋ"})}</option>{[...Array(10)].map((_,i)=><option key={i} value={i+1}>{t({en:"Class", pa:"ਜਮਾਤ"})} {i+1}</option>)}</select></div><div style={{background:'rgba(0,0,0,0.3)', padding:15, borderRadius:12, marginBottom:25, display:'flex', alignItems:'center', justifyContent:'space-between', border:'1px solid rgba(255,255,255,0.05)'}}><div style={{textAlign:'left'}}><div style={{fontSize:'0.75rem', color:'#fb923c', fontWeight:700, letterSpacing:'1px'}}>{t({en:"REFERRAL CODE", pa:"ਰੈਫਰਲ ਕੋਡ"})}</div><div style={{fontSize:'1.1rem', fontFamily:'monospace', color:'white'}}>{code||'••••••'}</div></div><button onClick={fetchCode} style={{padding:'8px 16px', borderRadius:8, border:'none', background:'#fb923c', color:'#431407', fontWeight:700, cursor:'pointer'}}>{t({en:"Get Code", pa:"ਕੋਡ ਪ੍ਰਾਪਤ ਕਰੋ"})}</button></div><button onClick={handleLogout} style={{width:'100%', padding:15, borderRadius:16, background:'rgba(239, 68, 68, 0.15)', color:'#f87171', border:'1px solid rgba(239, 68, 68, 0.3)', fontSize:'1rem', fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:10}}><LogOut size={20}/> {t({en:"Sign Out", pa:"ਸਾਈਨ ਆਉਟ"})}</button></div>
+   return <div className="glass-panel" style={{width:'100%', maxWidth:500, padding:50, textAlign:'center', background:'rgba(15,23,42,0.8)'}}><div style={{width:100, height:100, borderRadius:'50%', background:'linear-gradient(135deg, var(--accent-glow), #ec4899)', margin:'0 auto 20px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'3rem', fontWeight:800, color:'#0f172a'}}>{user?.name?.charAt(0)||'T'}</div><h2 style={{fontSize:'1.8rem', fontWeight:700}}>{user?.name}</h2><p style={{color:'#94a3b8', fontSize:'1rem', marginBottom:30}}>{user?.email} • {t({en:"Faculty", pa:"ਫੈਕਲਟੀ"})}</p><div style={{background:'rgba(0,0,0,0.3)', padding:15, borderRadius:12, marginBottom:25, display:'flex', alignItems:'center', justifyContent:'space-between', border:'1px solid rgba(255,255,255,0.05)'}}><div style={{textAlign:'left'}}><div style={{fontSize:'0.75rem', color:'#fb923c', fontWeight:700, letterSpacing:'1px'}}>{t({en:"REFERRAL CODE", pa:"ਰੈਫਰਲ ਕੋਡ"})}</div><div style={{fontSize:'1.1rem', fontFamily:'monospace', color:'white'}}>{code||'••••••'}</div></div><button onClick={fetchCode} style={{padding:'8px 16px', borderRadius:8, border:'none', background:'#fb923c', color:'#431407', fontWeight:700, cursor:'pointer'}}>{t({en:"Get Code", pa:"ਕੋਡ ਪ੍ਰਾਪਤ ਕਰੋ"})}</button></div><button onClick={handleLogout} style={{width:'100%', padding:15, borderRadius:16, background:'rgba(239, 68, 68, 0.15)', color:'#f87171', border:'1px solid rgba(239, 68, 68, 0.3)', fontSize:'1rem', fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:10}}><LogOut size={20}/> {t({en:"Sign Out", pa:"ਸਾਈਨ ਆਉਟ"})}</button></div>
 }
